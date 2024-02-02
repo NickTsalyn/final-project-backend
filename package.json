@@ -2,7 +2,6 @@
   "name": "task-pro-backend",
   "version": "1.0.0",
   "description": "final project",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
