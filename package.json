@@ -1,6 +1,7 @@
 {
   "name": "task-pro-backend",
   "version": "1.0.0",
+  "private": true,
   "description": "final project",
   "type": "module",
   "scripts": {
@@ -10,17 +11,11 @@
     "lint": "eslint **/*.js",
     "lint:fix": "eslint --fix **/*.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NickTsalyn/task-pro-backend.git"
-  },
+
   "keywords": [],
   "author": "Nick's Eleven",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NickTsalyn/task-pro-backend/issues"
-  },
-  "homepage": "https://github.com/NickTsalyn/task-pro-backend#readme",
+
   "dependencies": {
     "@sendgrid/mail": "^8.1.0",
     "bcryptjs": "^2.4.3",
