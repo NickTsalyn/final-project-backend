@@ -49,7 +49,7 @@ userScheme.post("findOneAndUpdate", handleSaveError);
 
 export const userSignupScheme = Joi.object({
 	name: Joi.string().required(),
-    email: Joi.string.pattern(emailPattern).required(),
+    email: Joi.string().pattern(emailPattern).required(),
     password: Joi.string().min(6).required(),
 })
 
@@ -60,7 +60,7 @@ export const userSigninScheme = Joi.object({
 
 export const userEditScheme = Joi.object({
 	name: Joi.string(),
-	email: Joi.string.pattern(emailPattern),
+	email: Joi.string().pattern(emailPattern),
 	password: Joi.string().min(6),
 });
 

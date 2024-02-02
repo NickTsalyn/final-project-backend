@@ -73,22 +73,25 @@ const getCurrent = async(req, res) => {
 }
 
 const updateAvatar = async(req, res) => {
+    const {token} = req.user
+    let avatar = req.user.avatar
+
     const {path: oldPath, filename} = req.file
-    const newPath = path.join("profileAvatar", filename)
+    const newPath = path.join(avatarPath, filename)
     await fs.rename(oldPath, newPath)
-    avatarURL = path.join('profileAvatar', filename)
+    avatar = path.join('profileAvatar', filename)
 
     const result = await User.findOneAndUpdate({token}, {new: true})
     if(!result) {
         throw HttpError(404, "User not found")
     }
-    if(req.user.avatarURL) {
-        const oldAvatarPath = path.join(path.resolve('public', req.user.avatarURL))
+    if(req.user.avatar) {
+        const oldAvatarPath = path.join(path.resolve('public', req.user.avatar))
         await fs.unlink(oldAvatarPath)
     }
 
     res.json({
-        avatarURL: result.avatarURL
+        avatar: result.avatar
     })
 
 }

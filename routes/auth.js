@@ -3,8 +3,6 @@ import express from "express";
 import { isEmptyBody, authenticate, upload, resizeAvatar } from "../middlewares/index.js";
 import validateBody from "../decorators/validateBody.js";
 import { userSignupScheme, userSigninScheme } from "../models/User.js";
-import upload from "../middlewares/upload.js";
-import resizeAvatar from "../middlewares/resizeAvatar.js";
 import authController from "../controllers/auth-controller.js";
 
 const authRouter = express.Router();
