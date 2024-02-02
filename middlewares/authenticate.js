@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 import {HttpError} from "../helpers/index.js";
 import User from "../models/User.js";
+import ctrlWrapper from '../decorators/ctrlWrapper.js';
 
 dotenv.config();
 
@@ -28,4 +29,4 @@ const authenticate = async(req, res, next) => {
     }
 }
 
-export default authenticate
+export default ctrlWrapper(authenticate)

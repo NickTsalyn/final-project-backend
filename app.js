@@ -3,6 +3,8 @@ import logger from 'morgan'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
+import authRouter from './routes/auth.js'
+
 dotenv.config()
 
 const app = express()
@@ -14,8 +16,8 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static("public"))
 
-app.use('/api/')
-app.use('/api/users')
+// app.use('/api/')
+app.use('/api/users', authRouter)
 
 app.use((req, res) => {
     res.status(404).json({message: "Not found"})
