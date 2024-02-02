@@ -2,6 +2,8 @@ import express from 'express'
 import logger from 'morgan'
 import cors from 'cors'
 import dotenv from "dotenv";
+import swaggerUi from 'swagger-ui-express';
+import { specs } from './swagger/swagger-options.js';
 
 import authRouter from './routes/auth.js';
 // import userRouter from './routes/user.js';
@@ -17,6 +19,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static("public"))
 
+app.use("/lobsters/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api/')
 app.use('/api/users', authRouter)
 app.use((req, res) => {

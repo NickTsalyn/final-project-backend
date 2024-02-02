@@ -27,18 +27,18 @@ const userScheme = new Schema(
 		theme: {
 			type: String,
 			enum: themeList,
-			default: "light",
+			default: "violet",
 		},
 		avatar: String,
 		token: String,
-		verify: {
-			type: Boolean,
-			default: false,
-		},
-		verificationToken: {
-			type: String,
-			required: [true, "Verify token is required"],
-		},
+		// verify: {
+		// 	type: Boolean,
+		// 	default: false,
+		// },
+		// verificationToken: {
+		// 	type: String,
+		// 	required: [true, "Verify token is required"],
+		// },
 	},
 	{ versionKey: false, timestamps: true }
 );
