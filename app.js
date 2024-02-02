@@ -1,7 +1,10 @@
 import express from 'express'
 import logger from 'morgan'
 import cors from 'cors'
-import dotenv from 'dotenv'
+import "dotenv/config";
+
+import authRouter from './routes/auth.js';
+import userRouter from './routes/user.js';
 
 import authRouter from './routes/auth.js'
 
@@ -18,7 +21,6 @@ app.use(express.static("public"))
 
 // app.use('/api/')
 app.use('/api/users', authRouter)
-
 app.use((req, res) => {
     res.status(404).json({message: "Not found"})
 })

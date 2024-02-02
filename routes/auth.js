@@ -1,6 +1,6 @@
 import express from "express";
 
-import { isEmptyBody, authenticate } from "../middlewares/index.js";
+import { isEmptyBody, authenticate, upload, resizeAvatar } from "../middlewares/index.js";
 import validateBody from "../decorators/validateBody.js";
 import { userSignupScheme, userSigninScheme } from "../models/User.js";
 import upload from "../middlewares/upload.js";
@@ -17,5 +17,4 @@ authRouter.patch("/avatar", upload.single(), resizeAvatar, authenticate, authCon
 // authRouter.get("/verify/:verificationToken")
 // authRouter.post("/verify", isEmptyBody, validateBody(userEmailScheme))
 
-
-export default authRouter
+export default authRouter;
