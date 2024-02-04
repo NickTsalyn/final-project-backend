@@ -7,6 +7,8 @@ import { specs } from './swagger/swagger-options.js';
 
 import authRouter from './routes/auth.js';
 import tasksRouter from './routes/task.js';
+import boardRouter from './routes/board-router.js';
+import columnRouter from './routes/column-router.js';
 // import userRouter from './routes/user.js';
 
 dotenv.config()
@@ -21,9 +23,17 @@ app.use(express.json())
 app.use(express.static("public"))
 
 app.use("/lobsters/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
 // app.use('/api/')
 app.use('/api/users', authRouter)
 app.use('/api/tasks', tasksRouter);
+
+// boards
+app.use('/api/boards', boardRouter)
+
+// columns
+app.use('/api/columns', columnRouter)
+
 app.use((req, res) => {
     res.status(404).json({message: "Not found"})
 })
