@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './swagger/swagger-options.js';
 
 import authRouter from './routes/auth.js';
+import tasksRouter from './routes/task.js';
 // import userRouter from './routes/user.js';
 
 dotenv.config()
@@ -22,6 +23,7 @@ app.use(express.static("public"))
 app.use("/lobsters/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/api/')
 app.use('/api/users', authRouter)
+app.use('/api/tasks', tasksRouter);
 app.use((req, res) => {
     res.status(404).json({message: "Not found"})
 })
