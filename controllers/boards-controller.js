@@ -2,19 +2,24 @@ import Board from "../models/Board.js";
 import { HttpError } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
+
 const getAllBoards = async (req, res) => {
   const { _id: owner } = req.user;
-  const query = { owner };
-  const result = await Board.find(query).populate("owner", "title");
+
+  const result = await Board
+    .find({ owner })
+    .populate("owner", ["name"]);
+  
   if (result.length === 0) {
     throw HttpError(404, `No boards added`);
-  }
+  };
+
   res.json(result);
 };
 
 const addBoard = async (req, res) => {
   const { _id: owner } = req.user;
-  console.log(req.body);
+
   const result = await Board.create({ ...req.body, owner });
   res.status(201).json(result);
 };
@@ -42,8 +47,8 @@ const deleteBoard = async (req, res) => {
 };
 
 export default {
-    getAllBoards: ctrlWrapper(getAllBoards),
-    addBoard: ctrlWrapper(addBoard),
-    editBoardById: ctrlWrapper(editBoardById),
-    deleteBoard: ctrlWrapper(deleteBoard),
+  getAllBoards: ctrlWrapper(getAllBoards),
+  addBoard: ctrlWrapper(addBoard),
+  editBoardById: ctrlWrapper(editBoardById),
+  deleteBoard: ctrlWrapper(deleteBoard),
 };

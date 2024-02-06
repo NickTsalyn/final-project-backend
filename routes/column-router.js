@@ -7,11 +7,8 @@ const columnRouter = express.Router();
 columnRouter.use(authenticate);
 
 columnRouter.get("/", columnController.getAllColumns);
-
-columnRouter.post("/add", isEmptyBody, columnController.addColumn);
-
+columnRouter.post("/:boardId/addColumn", isEmptyBody, columnController.addColumn);
 columnRouter.patch("/edit/:id", isEmptyBody, columnController.editColumnById);
-
 columnRouter.delete("/remove/:id", columnController.deleteColumn);
 
 export default columnRouter;
