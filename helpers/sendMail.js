@@ -1,19 +1,14 @@
 import sgMail from "@sendgrid/mail";
 import "dotenv/config";
 
-const { SENGRID_API_KEY } = process.env;
-sgMail.setApiKey(SENGRID_API_KEY);
 
-const sendEmail = ({ to, from, subject, text, html }) => {
-	const msg = {
-		to,
-		from,
-		subject,
-		text,
-		html,
-	};
+const { SENDGRID_API_KEY, SENDGRID_EMAIL } = process.env;
 
-    return sgMail.send(msg)
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+const sendMail = data => {
+    const msg = { ...data, from: SENDGRID_EMAIL };
+    return sgMail.send(msg);
 };
 
-export default sendEmail
+export default sendMail;
