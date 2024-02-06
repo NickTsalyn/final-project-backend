@@ -68,8 +68,8 @@ const signout = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-	const { email } = req.user
-	res.json({ email })
+	const { email, name, theme, _id: id, avatar } = req.user;
+	res.json({ email, name, theme, id, avatar });
 };
 
 const updateAvatar = async (req, res) => {

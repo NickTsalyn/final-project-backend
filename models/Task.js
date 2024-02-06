@@ -11,7 +11,7 @@ const taskScheme = new Schema(
             type: String,
             required: [true, 'Set title for task']
         },
-        desctiption: {
+        description: {
             type: String,
         },
         priority: {
@@ -40,14 +40,14 @@ taskScheme.pre("findOneAndUpdate", preUpdate);
 
 export const taskAddSchema = Joi.object({
     title: Joi.string().required(),
-    desctiption: Joi.string(),
+    description: Joi.string(),
     priority: Joi.string().valid(...priorityList),
     deadline: Joi.string(),
 });
 
 export const taskEditSchema = Joi.object({
     title: Joi.string(),
-    desctiption: Joi.string(),
+    description: Joi.string(),
     priority: Joi.string().valid(...priorityList),
     deadline: Joi.string(),
 });
