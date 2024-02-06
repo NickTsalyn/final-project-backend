@@ -11,7 +11,7 @@ const tasksRouter = express.Router();
 tasksRouter.use(authenticate);
 
 tasksRouter.get('/', tasksController.getAll);
-tasksRouter.post('/', isEmptyBody, validateBody(taskAddSchema), tasksController.addTask);
+tasksRouter.post('/:columnId/addTask', isEmptyBody, validateBody(taskAddSchema), tasksController.addTask);
 tasksRouter.patch('/:id', isValidateId, isEmptyBody, validateBody(taskEditSchema), tasksController.editTask);
 tasksRouter.delete('/:id', isValidateId, tasksController.deleteTask);
 

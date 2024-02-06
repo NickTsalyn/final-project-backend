@@ -22,6 +22,10 @@ const taskScheme = new Schema(
         deadline: {
             type: String,
         },
+        column: {
+            type: String,
+            required: true
+        },
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'user',

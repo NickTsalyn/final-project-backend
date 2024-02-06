@@ -64,9 +64,10 @@ export const userEditScheme = Joi.object({
 	password: Joi.string().min(6),
 });
 
-export const userEmailScheme = Joi.object({
-    email: Joi.string().required()
-})
+export const userHelpMailScheme = Joi.object({
+	email: Joi.string().required(),
+	comment: Joi.string().required(),
+});
 
 const User = model("user", userScheme);
 

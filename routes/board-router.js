@@ -14,4 +14,4 @@ boardRouter.patch("/edit/:id", isEmptyBody, boardsController.editBoardById)
 
 boardRouter.delete("/remove/:id", boardsController.deleteBoard)
 
-export default boardRouter
+export default boardRouter;
