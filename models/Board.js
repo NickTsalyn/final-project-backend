@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 import { handleSaveError, preUpdate } from "./hooks.js";
 
-const boardScheme = new Schema (
+const boardScheme = new Schema(
     {
         title: {
             type: String,
@@ -15,14 +15,14 @@ const boardScheme = new Schema (
         },
 
         owner: {
-			type: Schema.Types.ObjectId,
-			ref: "user",
+            type: Schema.Types.ObjectId,
+            ref: "user",
             required: true
-		},
+        },
     },
 
-    { versionKey: false, timestamps: true }
-)
+    { versionKey: false, timestamps: false }
+);
 
 boardScheme.post("save", handleSaveError);
 boardScheme.pre("findOneAndUpdate", preUpdate);

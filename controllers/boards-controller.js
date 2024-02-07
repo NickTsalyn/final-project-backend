@@ -3,15 +3,18 @@ import { HttpError, cloudinary } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import fs from "fs/promises";
 
+
 const getAllBoards = async (req, res) => {
   const { _id: owner } = req.user;
-  const query = { owner };
 
-  const result = await Board.find(query).populate("owner", "title");
-
+  const result = await Board
+    .find({ owner })
+    .populate("owner", ["name"]);
+  
   if (result.length === 0) {
     throw HttpError(404, `No boards added`);
-  }
+  };
+
   res.json(result);
 };
 

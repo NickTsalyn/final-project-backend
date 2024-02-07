@@ -5,12 +5,12 @@ import fs from "fs/promises";
 import path from "path";
 
 import User from "../models/User.js";
-import { HttpError} from "../helpers/index.js";
+import { HttpError, sendMail} from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 dotenv.config()
 
-const { JWT_SECRET, BASE_URL } = process.env;
+const { JWT_SECRET } = process.env;
 
 const avatarPath = path.resolve('public', 'profileAvatar')
 
@@ -61,46 +61,62 @@ const signin = async (req, res) => {
 };
 
 const signout = async (req, res) => {
-    const {_id} = req.user
-    await User.findByIdAndUpdate(_id, {token: ''})
+	const { _id } = req.user
+	await User.findByIdAndUpdate(_id, { token: '' })
 
-    res.status(204).json({message: "Logout succesfull"})
-}
+	res.status(204).json({ message: "Logout succesfull" })
+};
 
-const getCurrent = async(req, res) => {
-    const {email} = req.user
-    res.json({email})
-}
+const getCurrent = async (req, res) => {
+	const { email, name, theme, _id: id, avatar } = req.user;
+	res.json({ email, name, theme, id, avatar });
+};
 
-const updateAvatar = async(req, res) => {
-    const {token} = req.user
-    let avatar = req.user.avatar
+const updateAvatar = async (req, res) => {
+	const { token } = req.user
+	let avatar = req.user.avatar
 
-    const {path: oldPath, filename} = req.file
-    const newPath = path.join(avatarPath, filename)
-    await fs.rename(oldPath, newPath)
-    avatar = path.join('profileAvatar', filename)
+	const { path: oldPath, filename } = req.file
+	const newPath = path.join(avatarPath, filename)
+	await fs.rename(oldPath, newPath)
+	avatar = path.join('profileAvatar', filename)
 
-    const result = await User.findOneAndUpdate({token}, {new: true})
-    if(!result) {
-        throw HttpError(404, "User not found")
-    }
-    if(req.user.avatar) {
-        const oldAvatarPath = path.join(path.resolve('public', req.user.avatar))
-        await fs.unlink(oldAvatarPath)
-    }
+	const result = await User.findOneAndUpdate({ token }, { new: true })
+	if (!result) {
+		throw HttpError(404, "User not found")
+	}
+	if (req.user.avatar) {
+		const oldAvatarPath = path.join(path.resolve('public', req.user.avatar))
+		await fs.unlink(oldAvatarPath)
+	}
+
+	res.json({
+		avatar: result.avatar
+	})
+
+};
+
+const sendNeedHelp = async (req, res) => {
+    const { email, comment } = req.body;
+
+	const helpMessage = {
+        to: email,
+        subject: "Task PRO: Need help",
+        text: comment,
+    };
+
+    await sendMail(helpMessage);
 
     res.json({
-        avatar: result.avatar
-    })
-
-}
-
+        message: "Mail sent"
+    });
+};
 
 export default {
-    signup: ctrlWrapper(signup),
-    signin: ctrlWrapper(signin),
-    signout: ctrlWrapper(signout),
-    getCurrent: ctrlWrapper(getCurrent),
-    updateAvatar: ctrlWrapper(updateAvatar)
-}
+	signup: ctrlWrapper(signup),
+	signin: ctrlWrapper(signin),
+	signout: ctrlWrapper(signout),
+	getCurrent: ctrlWrapper(getCurrent),
+	updateAvatar: ctrlWrapper(updateAvatar),
+	sendNeedHelp: ctrlWrapper(sendNeedHelp),
+};
