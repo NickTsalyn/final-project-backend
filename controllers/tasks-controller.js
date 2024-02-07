@@ -8,15 +8,16 @@ const getAll = async (req, res) => {
 
     const result = await Task
         .find({ owner }, "-createdAt -updatedAt")
-        // .populate("owner", ["name"]);
+        .populate("owner", ["name"]);
     
     res.json(result);
 };
 
 const addTask = async (req, res) => {
     const { _id: owner } = req.user;
+    const { columnId: column } = req.params;
 
-    const result = await Task.create({...req.body, owner});
+    const result = await Task.create({ ...req.body, owner, column });
     res.status(201).json(result);
 };
 

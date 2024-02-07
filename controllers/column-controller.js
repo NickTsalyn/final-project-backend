@@ -3,7 +3,12 @@ import { HttpError } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 const getAllColumns = async (req, res) => {
-  const result = await Column.find();
+  const { _id: owner } = req.user;
+
+  const result = await Column
+    .find({ owner }, "-createdAt -updatedAt")
+    .populate("owner", ["name"]);
+  
   if (result.length === 0) {
     throw HttpError(404, `No columns added`);
   }
@@ -11,7 +16,10 @@ const getAllColumns = async (req, res) => {
 };
 
 const addColumn = async (req, res) => {
-  const result = await Column.create(req.body);
+  const { _id: owner } = req.user;
+  const { boardId: board } = req.params;
+
+  const result = await Column.create({ ...req.body, owner, board });
   res.status(201).json(result);
 };
 
