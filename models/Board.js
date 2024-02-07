@@ -9,15 +9,10 @@ const boardScheme = new Schema (
             required: true
         },
 
-        // iconURL: {
-        //     type: String,
-        //     required: true
-        // },
-
-        // backgroundURL: {
-        //     type: String,
-        //     required: true
-        // },
+        backgroundURL: {
+            type: String,
+            required: true
+        },
 
         owner: {
 			type: Schema.Types.ObjectId,

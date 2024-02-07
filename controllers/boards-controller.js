@@ -1,11 +1,14 @@
 import Board from "../models/Board.js";
-import { HttpError } from "../helpers/index.js";
+import { HttpError, cloudinary } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
+import fs from "fs/promises";
 
 const getAllBoards = async (req, res) => {
   const { _id: owner } = req.user;
   const query = { owner };
+
   const result = await Board.find(query).populate("owner", "title");
+
   if (result.length === 0) {
     throw HttpError(404, `No boards added`);
   }
@@ -14,15 +17,24 @@ const getAllBoards = async (req, res) => {
 
 const addBoard = async (req, res) => {
   const { _id: owner } = req.user;
-  console.log(req.body);
-  const result = await Board.create({ ...req.body, owner });
+
+  const { url: backgroundURL } = await cloudinary.uploader.upload(req.file.path,
+    {
+      folder: "task-pro",
+    }
+  );
+  await fs.unlink(req.file.path);
+
+  const result = await Board.create({ ...req.body, backgroundURL, owner });
   res.status(201).json(result);
 };
 
 const editBoardById = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
+
   const result = await Board.findByIdAndUpdate({ _id: id, owner }, req.body);
+
   if (!result) {
     throw HttpError(404, `Board with id=${id} not found`);
   }
@@ -32,7 +44,9 @@ const editBoardById = async (req, res) => {
 const deleteBoard = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
+
   const result = await Board.findByIdAndDelete({ _id: id, owner });
+
   if (!result) {
     throw HttpError(404, `Board with id=${id} not found`);
   }
@@ -42,8 +56,8 @@ const deleteBoard = async (req, res) => {
 };
 
 export default {
-    getAllBoards: ctrlWrapper(getAllBoards),
-    addBoard: ctrlWrapper(addBoard),
-    editBoardById: ctrlWrapper(editBoardById),
-    deleteBoard: ctrlWrapper(deleteBoard),
+  getAllBoards: ctrlWrapper(getAllBoards),
+  addBoard: ctrlWrapper(addBoard),
+  editBoardById: ctrlWrapper(editBoardById),
+  deleteBoard: ctrlWrapper(deleteBoard),
 };
