@@ -73,28 +73,37 @@ const getCurrent = async (req, res) => {
 	res.json({ email, name, theme, id, avatar });
 };
 
-const updateAvatar = async (req, res) => {
-	const { token } = req.user
-	let avatar = req.user.avatar
+const editProfile = async (req, res) => {
+	if (!req.file) {
+		throw HttpError(400, "No file uploaded");
+	};
 
-	const { path: oldPath, filename } = req.file
-	const newPath = path.join(avatarPath, filename)
-	await fs.rename(oldPath, newPath)
-	avatar = path.join('profileAvatar', filename)
+	const { _id } = req.user;
+	const { password } = req.body;
+	const hashPassword = await bcrypt.hash(password, 10);
 
-	const result = await User.findOneAndUpdate({ token }, { new: true })
+	const { path: oldPath, filename } = req.file;
+	const newPath = path.join(avatarPath, filename);
+	await fs.rename(oldPath, newPath);
+	const avatar = path.join('profileAvatar', filename);
+
+	const result = await User.findOneAndUpdate(_id, { ...req.body, avatar, password: hashPassword });
+
 	if (!result) {
 		throw HttpError(404, "User not found")
-	}
+	};
 	if (req.user.avatar) {
 		const oldAvatarPath = path.join(path.resolve('public', req.user.avatar))
 		await fs.unlink(oldAvatarPath)
-	}
+	};
 
 	res.json({
-		avatar: result.avatar
-	})
-
+		user: {
+			name: result.name,
+			email: result.email,
+			avatar: result.avatar,
+		}
+	});
 };
 
 const sendNeedHelp = async (req, res) => {
@@ -118,6 +127,6 @@ export default {
 	signin: ctrlWrapper(signin),
 	signout: ctrlWrapper(signout),
 	getCurrent: ctrlWrapper(getCurrent),
-	updateAvatar: ctrlWrapper(updateAvatar),
+	editProfile: ctrlWrapper(editProfile),
 	sendNeedHelp: ctrlWrapper(sendNeedHelp),
 };
