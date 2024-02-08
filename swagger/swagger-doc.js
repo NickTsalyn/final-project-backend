@@ -373,6 +373,9 @@
  *     allBoardsResponse:
  *       type: object
  *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
  *         title:
  *           type: string
  *           example: "Board 1"
@@ -388,10 +391,6 @@
  *             name:
  *               type: string
  *               example: "Alvaro Capibara"
- *       required:
- *         - title
- *         - backgroundURL
- *         - owner
  */
 
 /** ADDBOARD
@@ -462,3 +461,129 @@
  *               type: string
  *               example: "John Doe"
  */
+
+
+
+
+/** GETALLCOLUMNS
+ * @swagger
+ * /api/columns:
+ *   get:
+ *     tags: [Column]
+ *     summary: "Get all columns for the current user"
+ *     security:
+ *       - Bearer: []
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/allColumnsResponse'
+ *       400:
+ *         description: Bad request (invalid request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: No columns added
+ *         content: {}
+ */
+/** SCHEMAS for GETALLCOLUMNS:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     allColumnsResponse:
+ *       type: array
+ *       items:
+ *         type: object
+ *         properties:
+ *           _id:
+ *             type: string
+ *             example: "123456789"
+ *           title:
+ *             type: string
+ *             example: "Column 1"
+ *           board:
+ *             type: string
+ *             example: "123456789"
+ *           owner:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: "123456789"
+ *               name:
+ *                 type: string
+ *                 example: "Alvaro Capibara"
+ *       required:
+ *         - _id
+ *         - title
+ *         - owner
+ */
+
+
+
+
+/** GETALLTASKS
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     tags: [Task]
+ *     summary: "Get all tasks for the current user"
+ *     security:
+ *       - Bearer: []
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/allTasksResponse'
+ *       400:
+ *         description: Bad request (invalid request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ */
+/** SCHEMAS for GETALLTASKS:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     allTasksResponse:
+ *       type: array
+ *       items:
+ *         type: object
+ *         properties:
+ *           _id:
+ *             type: string
+ *             example: "1234567890"
+ *           title:
+ *             type: string
+ *             example: "Task 1"
+ *           priority:
+ *             type: string
+ *             enum: ["Without", "Low", "Medium", "High"]
+ *             default: "Without"
+ *             example: "Low"
+ *           deadline:
+ *             type: string
+ *             example: "24/02/24"
+ *           column:
+ *             type: string
+ *             example: "1234567890"
+ *           owner:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: "1234567890"
+ *               name:
+ *                 type: string
+ *                 example: "Alvaro Capibara"
+ */
+

@@ -6,7 +6,7 @@ const options = {
         openapi: '3.0.1',
         info: {
             title: 'Task PRO V1 API docs',
-            version: '1.0.1',
+            version: '1.0.2',
             description: "API documentation for project 'task-pro-backend'. [Backend github repository](https://github.com/NickTsalyn/task-pro-backend)",
             license: {
                 "name": "MIT",
@@ -19,7 +19,7 @@ const options = {
     },
   
     // Paths to files with annotations
-    apis: ['./swagger/swagger-doc.js', './routes/auth.js', './routes/task.js'],
+    apis: ['./swagger/swagger-doc.js', './routes/auth.js', './routes/board-router.js', './routes/column-router.js', './routes/task.js'],
 };
 
 
