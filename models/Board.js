@@ -11,7 +11,6 @@ const boardScheme = new Schema(
 
         backgroundURL: {
             type: String,
-            required: true
         },
 
         owner: {

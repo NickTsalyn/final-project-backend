@@ -1,7 +1,6 @@
 import Board from "../models/Board.js";
 import { HttpError, cloudinary } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
-import fs from "fs/promises";
 
 
 const getAllBoards = async (req, res) => {
@@ -11,24 +10,13 @@ const getAllBoards = async (req, res) => {
     .find({ owner })
     .populate("owner", ["name"]);
   
-  if (result.length === 0) {
-    throw HttpError(404, `No boards added`);
-  };
-
   res.json(result);
 };
 
 const addBoard = async (req, res) => {
   const { _id: owner } = req.user;
 
-  const { url: backgroundURL } = await cloudinary.uploader.upload(req.file.path,
-    {
-      folder: "task-pro",
-    }
-  );
-  await fs.unlink(req.file.path);
-
-  const result = await Board.create({ ...req.body, backgroundURL, owner });
+  const result = await Board.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
