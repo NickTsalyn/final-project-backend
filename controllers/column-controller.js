@@ -9,9 +9,6 @@ const getAllColumns = async (req, res) => {
     .find({ owner }, "-createdAt -updatedAt")
     .populate("owner", ["name"]);
   
-  if (result.length === 0) {
-    throw HttpError(404, `No columns added`);
-  }
   res.json(result);
 };
 

@@ -313,8 +313,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *             example:
- *               message: "Mail sent"
+ *                   example: "Mail sent"
  *       400:
  *         description: Bad request (invalid request body)
  *         content: {}
@@ -393,9 +392,67 @@
  *               example: "Alvaro Capibara"
  */
 
+/** GETBOARD
+ * @swagger
+ * /api/boards/{id}:
+ *   get:
+ *     tags: [Board]
+ *     summary: "Get board by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the board to get
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/boardResponse'
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
+ */
+/** SCHEMAS for GETBOARD:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     boardResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "Board 1"
+ *         backgroundURL:
+ *           type: string
+ *           example: "/backgrounds/board1.jpg"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: "Jhon Cena"
+ */
+
 /** ADDBOARD
  * @swagger
- * /api/boards/add:
+ * /api/boards/:
  *   post:
  *     tags: [Board]
  *     summary: "Add a new board"
@@ -460,6 +517,41 @@
  *             name:
  *               type: string
  *               example: "John Doe"
+ */
+
+/** DELETEBOARD
+ * @swagger
+ * /api/boards/{id}:
+ *   delete:
+ *     tags: [Board]
+ *     summary: "Remove board by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the board to remove
+ *     responses:
+ *       204:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Board removed"
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
  */
 
 
