@@ -23,10 +23,20 @@ const signup = async (req, res) => {
 	}
 
 	const hashPassword = await bcrypt.hash(password, 10);
+	const newUser = await User.create({ ...req.body, password: hashPassword, name });
 
-	const newUser = await User.create({ ...req.body, password: hashPassword });
+	const payload = {
+		id: newUser._id,
+	};
 
+	const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
+	newUser.token = token;
+
+  	await newUser.save();	
+	
 	res.status(201).json({
+		token,
 		user: {
 			name: newUser.name,
 			email: newUser.email,
