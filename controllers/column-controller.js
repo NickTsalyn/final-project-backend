@@ -12,6 +12,21 @@ const getAllColumns = async (req, res) => {
   res.json(result);
 };
 
+const getColumnByID = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  
+  const result = await Column
+    .findOne({ _id: id, owner })
+    .populate("owner", ["name"]);
+
+  if (!result) {
+    throw HttpError(404, `Column with id=${id} not found!`);
+  };
+
+  res.json(result);
+};
+
 const addColumn = async (req, res) => {
   const { _id: owner } = req.user;
   const { boardId: board } = req.params;
@@ -42,6 +57,7 @@ const deleteColumn = async (req, res) => {
 
 export default {
   getAllColumns: ctrlWrapper(getAllColumns),
+  getColumnByID: ctrlWrapper(getColumnByID),
   addColumn: ctrlWrapper(addColumn),
   editColumnById: ctrlWrapper(editColumnById),
   deleteColumn: ctrlWrapper(deleteColumn),

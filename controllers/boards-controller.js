@@ -32,6 +32,13 @@ const getByID = async (req, res) => {
 
 const addBoard = async (req, res) => {
   const { _id: owner } = req.user;
+  const { title } = req.body;
+
+  const existingBoard = await Board.findOne({ title, owner });
+
+  if (existingBoard) {
+    return res.status(400).json({ error: 'Board with the same title is already exists' });
+  }
 
   // const { url: backgroundURL } = await cloudinary.uploader.upload(req.file.path,
   //   {
