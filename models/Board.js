@@ -13,6 +13,10 @@ const boardScheme = new Schema(
             type: String,
         },
 
+        iconURL:{
+            type: String,
+        },
+
         owner: {
             type: Schema.Types.ObjectId,
             ref: "user",
