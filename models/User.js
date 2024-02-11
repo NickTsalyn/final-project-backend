@@ -24,6 +24,12 @@ const userScheme = new Schema(
 			required: [true, "Set password for user"],
 			minlength: 6,
 		},
+		resetToken: {
+			type: String
+		},
+		resetTokenExpiration: {
+			type: String
+		},
 		theme: {
 			type: String,
 			enum: themeList,
