@@ -66,13 +66,15 @@ const signin = async (req, res) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  res.json({
-    token,
-    user: {
-      name: user.name,
-      email: user.email,
-    },
-  });
+	res.json({
+		token,
+		user: {
+            name: user.name,
+			email: user.email,
+			theme: user.theme,
+			avatar: user.avatar,
+		},
+	});
 };
 
 const signout = async (req, res) => {
@@ -88,13 +90,10 @@ const getCurrent = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
-  if (!req.file) {
-    throw HttpError(400, "No file uploaded");
-  }
-
-  const { _id } = req.user;
-  const { password } = req.body;
-  const hashPassword = await bcrypt.hash(password, 10);
+	const { _id } = req.user;
+	const { password } = req.body;
+	
+	const hashPassword = await bcrypt.hash(password, 10);
 
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(avatarPath, filename);

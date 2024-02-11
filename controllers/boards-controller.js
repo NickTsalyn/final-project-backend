@@ -72,7 +72,7 @@ const deleteBoard = async (req, res) => {
     throw HttpError(404, `Board with id=${id} not found`);
   };
 
-  res.status(200).json({
+  res.status(204).json({
     message: "Board removed",
   });
 };

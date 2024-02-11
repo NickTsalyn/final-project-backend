@@ -26,6 +26,7 @@
  */
 
 
+
 /** SIGNUP
  * @swagger
  * /api/users/signup:
@@ -76,6 +77,9 @@
  *     signupResponse:
  *       type: object
  *       properties:
+ *         token:
+ *           type: string
+ *           example: "your_generated_token"
  *         user:
  *           type: object
  *           properties:
@@ -145,6 +149,12 @@
  *            email:
  *              type: string
  *              format: email
+ *            theme:
+ *              type: string
+ *              example: violet
+ *            avatar:
+ *              type: string
+ *              example: "/avatars/example_avatar.jpg"
  */
 
 /** SIGNOUT
@@ -259,11 +269,11 @@
  *       properties:
  *         name:
  *           type: string
- *           example: "John Cena"
+ *           example: Alvaro Capibara
  *         email:
  *           type: string
  *           format: email
- *           example: "john.cena@example.com"
+ *           example: "AlvaroCapibara@example.com"
  *         password:
  *           type: string
  *           minLength: 6
@@ -283,7 +293,7 @@
  *               example: "John Cena"
  *             email:
  *               type: string
- *               example: "john.cena@example.com"
+ *               example: "AlvaroCapibara@example.com"
  *             avatar:
  *               type: string
  *               example: "/profileAvatar/example_avatar.jpg"
@@ -392,64 +402,6 @@
  *               example: "Alvaro Capibara"
  */
 
-/** GETBOARD
- * @swagger
- * /api/boards/{id}:
- *   get:
- *     tags: [Board]
- *     summary: "Get board by ID"
- *     security:
- *       - Bearer: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the board to get
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/boardResponse'
- *       400:
- *         description: Bad request (invalid ID format)
- *         content: {}
- *       401:
- *         description: Unauthorized (invalid access token)
- *         content: {}
- *       404:
- *         description: Board not found
- *         content: {}
- */
-/** SCHEMAS for GETBOARD:
- * @swagger
- * components:
- *   schemas:
- * 
- *     boardResponse:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           example: "1234567890"
- *         title:
- *           type: string
- *           example: "Board 1"
- *         backgroundURL:
- *           type: string
- *           example: "/backgrounds/board1.jpg"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Jhon Cena"
- */
-
 /** ADDBOARD
  * @swagger
  * /api/boards/:
@@ -516,7 +468,120 @@
  *               example: "123456789"
  *             name:
  *               type: string
- *               example: "John Doe"
+ *               example: Alvaro Capibara
+ */
+
+/** GETBOARD
+ * @swagger
+ * /api/boards/{id}:
+ *   get:
+ *     tags: [Board]
+ *     summary: "Get board by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the board to get
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/boardResponse'
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
+ */
+/** SCHEMAS for GETBOARD:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     boardResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "Board 1"
+ *         backgroundURL:
+ *           type: string
+ *           example: "/backgrounds/board1.jpg"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: Alvaro Capibara
+ */
+
+/** EDITBOARD
+ * @swagger
+ * /api/boards/{id}:
+ *   patch:
+ *     tags: [Board]
+ *     summary: "Edit board by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the board to edit
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/boardEditRequest'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/boardResponse'
+ *       400:
+ *         description: Bad request (invalid ID format or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
+ */
+/** SCHEMAS for EDITBOARD:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     boardEditRequest:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Updated Board Title"
+ *         backgroundURL:
+ *           type: string
+ *           example: "/backgrounds/updated_board.jpg"
+ *       required:
+ *         - title
+ *         - backgroundURL
  */
 
 /** DELETEBOARD
@@ -553,7 +618,6 @@
  *         description: Board not found
  *         content: {}
  */
-
 
 
 
@@ -616,6 +680,236 @@
  *         - owner
  */
 
+/** GETCOLUMN
+ * @swagger
+ * /api/columns/{id}:
+ *   get:
+ *     tags: [Column]
+ *     summary: "Get column by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the column to get
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/columnResponse'
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Column not found
+ *         content: {}
+ */
+/** SCHEMAS for GETCOLUMN:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     columnResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "Column 1"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: "Alvaro Capibara"
+ */
+
+/** ADDCOLUMN
+ * @swagger
+ * /api/columns/{boardId}/addColumn:
+ *   post:
+ *     tags: [Column]
+ *     summary: "Add column to a board"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: boardId
+ *         required: true
+ *         description: ID of the board to add the column to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/addColumnScheme'
+ *     responses:
+ *       201:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/columnResponse'
+ *       400:
+ *         description: Bad request (invalid board ID or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
+ */
+/** SCHEMAS for ADDCOLUMN:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     addColumnScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "New Column Title"
+ * 
+ * 
+ *     columnResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "New Column Title"
+ *         board:
+ *           type: string
+ *           example: "1234567890"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: "Jhon Cena"
+ */
+
+/** EDITCOLUMN
+ * @swagger
+ * /api/columns/{id}:
+ *   patch:
+ *     tags: [Column]
+ *     summary: "Edit column by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the column to edit
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/editColumnScheme'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/columnResponse'
+ *       400:
+ *         description: Bad request (invalid ID format or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Column not found
+ *         content: {}
+ */
+/** SCHEMAS for EDITCOLUMN:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     editColumnScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Updated Column Title"
+ * 
+ * 
+ *     columnResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "Updated Column Title"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: "Alvaro Capibara"
+ */
+
+/** DELETECOLUMN
+ * @swagger
+ * /api/columns/{id}:
+ *   delete:
+ *     tags: [Column]
+ *     summary: "Delete column by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the column to delete
+ *     responses:
+ *       204:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Column removed"
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Column not found
+ *         content: {}
+ */
 
 
 
@@ -677,5 +971,181 @@
  *               name:
  *                 type: string
  *                 example: "Alvaro Capibara"
+ */
+
+/** ADDTASK
+ * @swagger
+ * /api/tasks/{columnId}/addTask:
+ *   post:
+ *     tags: [Task]
+ *     summary: "Add task to a column"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: columnId
+ *         required: true
+ *         description: ID of the column to add the task to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/addTaskScheme'
+ *     responses:
+ *       201:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/taskResponse'
+ *       400:
+ *         description: Bad request (invalid column ID or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Column not found
+ *         content: {}
+ */
+/** SCHEMAS for ADDTASK:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     addTaskScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "New Task Title"
+ *         priority:
+ *           type: string
+ *           enum: ["Without", "Low", "Medium", "High"]
+ *           default: "Without"
+ *         deadline:
+ *           type: string
+ *           example: "24/02/24"
+ * 
+ * 
+ *     taskResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "New Task Title"
+ *         priority:
+ *           type: string
+ *           enum: ["Without", "Low", "Medium", "High"]
+ *           default: "Without"
+ *         deadline:
+ *           type: string
+ *           example: "24/02/24"
+ *         column:
+ *           type: string
+ *           example: "0987654321"
+ *         owner:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *               example: "1234567890"
+ *             name:
+ *               type: string
+ *               example: "Jhon Cena"
+ */
+
+/** EDITTASK
+ * @swagger
+ * /api/tasks/{id}:
+ *   patch:
+ *     tags: [Task]
+ *     summary: "Edit task by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the task to edit
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/editTaskScheme'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/taskResponse'
+ *       400:
+ *         description: Bad request (invalid ID format or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Task not found
+ *         content: {}
+ */
+/** SCHEMAS for EDITTASK:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     editTaskScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Updated Task Title"
+ *         priority:
+ *           type: string
+ *           enum: ["Without", "Low", "Medium", "High"]
+ *         deadline:
+ *           type: string
+ *           example: "25/02/24"
+ */
+
+/** DELETETASK
+ * @swagger
+ * /api/tasks/{id}:
+ *   delete:
+ *     tags: [Task]
+ *     summary: "Delete task by ID"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the task to delete
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Task deleted"
+ *       400:
+ *         description: Bad request (invalid ID format)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Task not found
+ *         content: {}
  */
 

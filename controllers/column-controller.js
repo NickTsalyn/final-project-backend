@@ -46,11 +46,14 @@ const editColumnById = async (req, res) => {
 
 const deleteColumn = async (req, res) => {
   const { id } = req.params;
-  const result = await Column.findByIdAndDelete(id);
+  const { _id: owner } = req.user;
+  const result = await Task.findOneAndDelete({ _id: id, owner });
+
   if (!result) {
     throw HttpError(404, `Column with id=${id} not found`);
   }
-  res.status(200).json({
+
+  res.status(204).json({
     message: "Column removed",
   });
 };
