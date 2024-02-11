@@ -32,7 +32,7 @@
  * /api/users/signup:
  *   post:
  *     tags: [Authentication]
- *     summary: "User signup"
+ *     summary: "User signup 🟢"
  *     requestBody:
  *       required: true
  *       content:
@@ -96,7 +96,7 @@
  * /api/users/signin:
  *   post:
  *     tags: [Authentication]
- *     summary: "User signin"
+ *     summary: "User signin 🟢"
  *     requestBody:
  *       required: true
  *       content:
@@ -162,7 +162,7 @@
  * /api/users/signout:
  *   post:
  *     tags: [Authentication]
- *     summary: "User signout"
+ *     summary: "User signout 🟢"
  *     security:
  *       - Bearer: []
  *     responses:
@@ -190,7 +190,7 @@
  * /api/users/current:
  *   get:
  *     tags: [Authentication]
- *     summary: "Get current user"
+ *     summary: "Get current user 🟢"
  *     security:
  *       - Bearer: []
  *     responses:
@@ -233,7 +233,7 @@
  * /api/users/edit:
  *   patch:
  *     tags: [Authentication]
- *     summary: "Edit user profile"
+ *     summary: "Edit user profile 🟢"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -304,7 +304,7 @@
  * /api/users/needHelp:
  *   post:
  *     tags: [Authentication]
- *     summary: "Send help request"
+ *     summary: "Send help request 🟢"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -356,7 +356,7 @@
  * /api/boards:
  *   get:
  *     tags: [Board]
- *     summary: "Get all boards for the current user"
+ *     summary: "Get all boards for the current user 🟢"
  *     security:
  *       - Bearer: []
  *     responses:
@@ -407,7 +407,7 @@
  * /api/boards/:
  *   post:
  *     tags: [Board]
- *     summary: "Add a new board"
+ *     summary: "Add a new board 🟢"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -476,7 +476,7 @@
  * /api/boards/{id}:
  *   get:
  *     tags: [Board]
- *     summary: "Get board by ID"
+ *     summary: "Get board by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -534,7 +534,7 @@
  * /api/boards/{id}:
  *   patch:
  *     tags: [Board]
- *     summary: "Edit board by ID"
+ *     summary: "Edit board by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -589,7 +589,7 @@
  * /api/boards/{id}:
  *   delete:
  *     tags: [Board]
- *     summary: "Remove board by ID"
+ *     summary: "Remove board by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -626,7 +626,7 @@
  * /api/columns:
  *   get:
  *     tags: [Column]
- *     summary: "Get all columns for the current user"
+ *     summary: "Get all columns for the current user 🟢"
  *     security:
  *       - Bearer: []
  *     responses:
@@ -685,7 +685,7 @@
  * /api/columns/{id}:
  *   get:
  *     tags: [Column]
- *     summary: "Get column by ID"
+ *     summary: "Get column by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -740,7 +740,7 @@
  * /api/columns/{boardId}/addColumn:
  *   post:
  *     tags: [Column]
- *     summary: "Add column to a board"
+ *     summary: "Add column to a board 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -812,7 +812,7 @@
  * /api/columns/{id}:
  *   patch:
  *     tags: [Column]
- *     summary: "Edit column by ID"
+ *     summary: "Edit column by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -881,7 +881,7 @@
  * /api/columns/{id}:
  *   delete:
  *     tags: [Column]
- *     summary: "Delete column by ID"
+ *     summary: "Delete column by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -918,7 +918,7 @@
  * /api/tasks:
  *   get:
  *     tags: [Task]
- *     summary: "Get all tasks for the current user"
+ *     summary: "Get all tasks for the current user 🟢"
  *     security:
  *       - Bearer: []
  *     responses:
@@ -978,7 +978,7 @@
  * /api/tasks/{columnId}/addTask:
  *   post:
  *     tags: [Task]
- *     summary: "Add task to a column"
+ *     summary: "Add task to a column 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -1024,6 +1024,9 @@
  *           type: string
  *           enum: ["Without", "Low", "Medium", "High"]
  *           default: "Without"
+ *         description:
+ *           type: string
+ *           example: "It is description for this Task"
  *         deadline:
  *           type: string
  *           example: "24/02/24"
@@ -1042,6 +1045,9 @@
  *           type: string
  *           enum: ["Without", "Low", "Medium", "High"]
  *           default: "Without"
+ *         description:
+ *           type: string
+ *           example: "It is description for this Task"
  *         deadline:
  *           type: string
  *           example: "24/02/24"
@@ -1064,7 +1070,7 @@
  * /api/tasks/{id}:
  *   patch:
  *     tags: [Task]
- *     summary: "Edit task by ID"
+ *     summary: "Edit task by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
@@ -1109,6 +1115,9 @@
  *         priority:
  *           type: string
  *           enum: ["Without", "Low", "Medium", "High"]
+ *         description:
+ *           type: string
+ *           example: "It is description for this Task"
  *         deadline:
  *           type: string
  *           example: "25/02/24"
@@ -1119,7 +1128,7 @@
  * /api/tasks/{id}:
  *   delete:
  *     tags: [Task]
- *     summary: "Delete task by ID"
+ *     summary: "Delete task by ID 🟢"
  *     security:
  *       - Bearer: []
  *     parameters:
