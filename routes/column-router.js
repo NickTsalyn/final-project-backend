@@ -9,7 +9,7 @@ columnRouter.use(authenticate);
 columnRouter.get("/", columnController.getAllColumns);
 columnRouter.get("/:id", isValidateId, columnController.editColumnById);
 columnRouter.post("/:boardId/addColumn", isEmptyBody, columnController.addColumn);
-columnRouter.patch("/edit/:id", isEmptyBody, columnController.editColumnById);
-columnRouter.delete("/remove/:id", columnController.deleteColumn);
+columnRouter.patch("/:id", isEmptyBody, columnController.editColumnById);
+columnRouter.delete("/:id", isValidateId, columnController.deleteColumn);
 
 export default columnRouter;

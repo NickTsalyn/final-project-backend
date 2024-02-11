@@ -67,6 +67,8 @@ const signin = async (req, res) => {
 		user: {
             name: user.name,
 			email: user.email,
+			theme: user.theme,
+			avatar: user.avatar,
 		},
 	});
 };
@@ -84,12 +86,9 @@ const getCurrent = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
-	if (!req.file) {
-		throw HttpError(400, "No file uploaded");
-	};
-
 	const { _id } = req.user;
 	const { password } = req.body;
+	
 	const hashPassword = await bcrypt.hash(password, 10);
 
 	const { path: oldPath, filename } = req.file;
