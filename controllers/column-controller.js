@@ -38,6 +38,7 @@ const addColumn = async (req, res) => {
 const editColumnById = async (req, res) => {
   const { id } = req.params;
   const result = await Column.findByIdAndUpdate(id, req.body);
+  
   if (!result) {
     throw HttpError(404, `Column with id=${id} not found`);
   }
@@ -47,7 +48,7 @@ const editColumnById = async (req, res) => {
 const deleteColumn = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
-  const result = await Task.findOneAndDelete({ _id: id, owner });
+  const result = await Column.findOneAndDelete({ _id: id, owner });
 
   if (!result) {
     throw HttpError(404, `Column with id=${id} not found`);

@@ -90,30 +90,32 @@ const getCurrent = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
-	const { _id } = req.user;
-	const { password } = req.body;
-	
-	const hashPassword = await bcrypt.hash(password, 10);
+  const { _id } = req.user;
 
-  const { path: oldPath, filename } = req.file;
-  const newPath = path.join(avatarPath, filename);
-  await fs.rename(oldPath, newPath);
-  const avatar = path.join("profileAvatar", filename);
+  let data = { ...req.body };
+  
+  if (req.body.password) {
+    const updatedPassword = await bcrypt.hash(req.body.password, 10);
 
-  const result = await User.findOneAndUpdate(_id, {
-    ...req.body,
-    avatar,
-    password: hashPassword,
-  });
+    data.password = updatedPassword;
+  };
+
+  
+  if (req.file) {
+    const { path: oldPath, filename } = req.file;
+    const newPath = path.join(avatarPath, filename);
+    await fs.rename(oldPath, newPath);
+    const newAvatar = path.join("profileAvatar", filename);
+    
+    data.avatar = newAvatar;
+  };
+  
+  const result = await User.findOneAndUpdate(_id, { ...data });
 
   if (!result) {
     throw HttpError(404, "User not found");
-  }
-  if (req.user.avatar) {
-    const oldAvatarPath = path.join(path.resolve("public", req.user.avatar));
-    await fs.unlink(oldAvatarPath);
-  }
-
+  };
+ 
   res.json({
     user: {
       name: result.name,
@@ -125,10 +127,12 @@ const editProfile = async (req, res) => {
 
 const sendNeedHelp = async (req, res) => {
   const { email, comment } = req.body;
+  // const emailTo = "taskpro.project@gmail.com";
+  const emailTo = "manoiloruslan@gmail.com";
 
   const helpMessage = {
-    to: email,
-    subject: "Task PRO: Need help",
+    to: emailTo,
+    subject: `Task PRO: Need help for ${email}`,
     text: comment,
   };
 
