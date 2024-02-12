@@ -8,7 +8,7 @@ export const columnScheme = new Schema(
             type: String,
             required: true
         },
-        board: {
+        boardName: {
             type: String,
             required: true
         },
