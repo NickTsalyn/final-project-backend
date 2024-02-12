@@ -29,9 +29,9 @@ const getColumnByID = async (req, res) => {
 
 const addColumn = async (req, res) => {
   const { _id: owner } = req.user;
-  const { boardName } = req.params;
+  const { boardId: board } = req.params;
 
-  const result = await Column.create({ ...req.body, owner, boardName });
+  const result = await Column.create({ ...req.body, owner, board });
   res.status(201).json(result);
 };
 
