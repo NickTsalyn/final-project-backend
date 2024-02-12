@@ -18,7 +18,6 @@ const getByID = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
   
-  console.log(id);
   const result = await Board
     .findOne({ _id: id, owner })
     .populate("owner", ["name"]);
