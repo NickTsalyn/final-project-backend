@@ -13,7 +13,7 @@ authRouter.post("/signout", authenticate, authController.signout);
 authRouter.get("/current", authenticate, authController.getCurrent);
 authRouter.patch("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
 authRouter.post("/needHelp", authenticate, isEmptyBody, validateBody(userHelpMailScheme), authController.sendNeedHelp);
-authRouter.post("/recovery", authenticate, isEmptyBody, authController.forgotPassword)
+authRouter.post("/recovery", isEmptyBody, authController.forgotPassword)
 
 // authRouter.get("/verify/:verificationToken")
 // authRouter.post("/verify", isEmptyBody, validateBody(userEmailScheme))
