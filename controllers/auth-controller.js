@@ -162,12 +162,12 @@ const forgotPassword = async (req, res) => {
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
-
+  
   const resetToken = generateRandomCode(24);
   const resetTokenExpiration = Date.now() + 3600000;
 
-  user.resetToken = resetToken.toString();
-  user.resetTokenExpiration = resetTokenExpiration.toString();
+  user.resetToken = resetToken;
+  user.resetTokenExpiration = resetTokenExpiration;
   await user.save();
 
   const forgotPasswordEmail = {
