@@ -8,7 +8,7 @@ columnRouter.use(authenticate);
 
 columnRouter.get("/", columnController.getAllColumns);
 columnRouter.get("/:id", isValidateId, columnController.editColumnById);
-columnRouter.post("/:boardId/addColumn", isEmptyBody, columnController.addColumn);
+columnRouter.post("/:id/addColumn", isValidateId, isEmptyBody, columnController.addColumn);
 columnRouter.patch("/:id", isEmptyBody, columnController.editColumnById);
 columnRouter.delete("/:id", isValidateId, columnController.deleteColumn);
 
