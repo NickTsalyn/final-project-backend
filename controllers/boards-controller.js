@@ -18,7 +18,6 @@ const getByID = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
   
-  console.log(id);
   const result = await Board
     .findOne({ _id: id, owner })
     .populate("owner", ["name"]);
@@ -72,7 +71,7 @@ const deleteBoard = async (req, res) => {
     throw HttpError(404, `Board with id=${id} not found`);
   };
 
-  res.status(200).json({
+  res.status(204).json({
     message: "Board removed",
   });
 };
