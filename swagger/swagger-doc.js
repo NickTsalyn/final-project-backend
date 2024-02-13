@@ -233,7 +233,7 @@
  * /api/users/edit:
  *   patch:
  *     tags: [Authentication]
- *     summary: "Edit user profile 🟢"
+ *     summary: "Edit user profile"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -299,12 +299,60 @@
  *               example: "/profileAvatar/example_avatar.jpg"
  */
 
+/** CHANGETHEME
+ * @swagger
+ * /api/users/changeTheme:
+ *   patch:
+ *     tags: [Authentication]
+ *     summary: "Change user theme 🟢"
+ *     security:
+ *       - Bearer: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/changeThemeScheme'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/changeThemeResponse'
+ *       400:
+ *         description: Bad request (invalid request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ */
+/** SCHEMAS for CHANGETHEME:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     changeThemeScheme:
+ *       type: object
+ *       properties:
+ *         theme:
+ *           type: string
+ *           example: "dark"
+ * 
+ *     changeThemeResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: "Theme updated"
+ */
+
 /** NEEDHELP
  * @swagger
  * /api/users/needHelp:
  *   post:
  *     tags: [Authentication]
- *     summary: "Send help request 🟢"
+ *     summary: "Send help request"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -443,6 +491,9 @@
  *         backgroundURL:
  *           type: string
  *           example: "/backgrounds/new_board.jpg"
+ *         iconURL:
+ *           type: string
+ *           example: "/icon/new_iconURL.jpg"
  *       required:
  *         - title
  *         - backgroundURL
@@ -460,6 +511,9 @@
  *         backgroundURL:
  *           type: string
  *           example: "/backgrounds/new_board.jpg"
+ *         iconURL:
+ *           type: string
+ *           example: "/icon/new_iconURL.jpg"
  *         owner:
  *           type: object
  *           properties:
@@ -518,6 +572,9 @@
  *         backgroundURL:
  *           type: string
  *           example: "/backgrounds/board1.jpg"
+ *         iconURL:
+ *           type: string
+ *           example: "/icon/example_iconURL.jpg"
  *         owner:
  *           type: object
  *           properties:
@@ -545,7 +602,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/boardEditRequest'
  *     responses:
@@ -579,6 +636,9 @@
  *         backgroundURL:
  *           type: string
  *           example: "/backgrounds/updated_board.jpg"
+ *         iconURL:
+ *           type: string
+ *           example: "/icon/updated_iconURL.jpg"
  *       required:
  *         - title
  *         - backgroundURL

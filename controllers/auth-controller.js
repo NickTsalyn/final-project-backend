@@ -143,6 +143,17 @@ const sendNeedHelp = async (req, res) => {
   });
 };
 
+const changeTheme = async (req, res) => {
+  const { _id } = req.user;
+  const { theme } = req.body;
+  
+  await User.findByIdAndUpdate(_id, { theme });
+
+  res.json({
+    message: "Theme updated"
+  });
+};
+
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -194,6 +205,7 @@ export default {
   signin: ctrlWrapper(signin),
   signout: ctrlWrapper(signout),
   getCurrent: ctrlWrapper(getCurrent),
+  changeTheme: ctrlWrapper(changeTheme),
   editProfile: ctrlWrapper(editProfile),
   sendNeedHelp: ctrlWrapper(sendNeedHelp),
   forgotPassword: ctrlWrapper(forgotPassword),
