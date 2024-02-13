@@ -168,7 +168,7 @@ const forgotPassword = async (req, res) => {
 
   await sendMail(forgotPasswordEmail);
 
-  res.json({ message: "Password reset link sent successfully" });
+  res.json({ message: "Password reset code sent successfully" });
 };
 
 const resetPassword = async (req, res) => {
