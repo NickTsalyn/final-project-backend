@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import User from "../models/User.js";
-import { HttpError, sendMail } from "../helpers/index.js";
+import { HttpError, sendMail, generateRandomCode } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 dotenv.config();
@@ -152,30 +152,16 @@ const forgotPassword = async (req, res) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  function generateRandomCode(length) {
-    const characters =
-      "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let code = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      code += characters.charAt(randomIndex);
-    }
-    return code;
-  }
-
-  const resetToken = generateRandomCode(12);
-  const resetTokenExpiration = Date.now() + 3600000; 
+  const resetToken = generateRandomCode(24);
+  const resetTokenExpiration = Date.now() + 3600000;
 
   user.resetToken = resetToken.toString();
   user.resetTokenExpiration = resetTokenExpiration.toString();
   await user.save();
 
-  console.log("Reset Token:", resetToken);
-  console.log("Reset Token Expiration:", resetTokenExpiration);
-
   const forgotPasswordEmail = {
     to: email,
-    from: "nicktsalyn@gmail.com",
+    from: "ManoiloRuslan@gmail.com",
     subject: "Password Reset Code",
     text: `Your password reset code is: ${resetToken}`,
   };
@@ -183,6 +169,24 @@ const forgotPassword = async (req, res) => {
   await sendMail(forgotPasswordEmail);
 
   res.json({ message: "Password reset link sent successfully" });
+};
+
+const resetPassword = async (req, res) => {
+  const { resetToken, newPassword } = req.body;
+
+  const user = await User.findOne({ resetToken: resetToken });
+
+  if (!user || user.resetTokenExpiration < Date.now()) {
+    return res.status(400).json({ message: "Invalid or expired reset code" });
+  }
+
+  const hashPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashPassword;
+  user.resetToken = null;
+  user.resetTokenExpiration = null;
+  await user.save();
+
+  res.json({ message: "Password successfully changed" });
 };
 
 export default {
@@ -193,4 +197,5 @@ export default {
   editProfile: ctrlWrapper(editProfile),
   sendNeedHelp: ctrlWrapper(sendNeedHelp),
   forgotPassword: ctrlWrapper(forgotPassword),
+  resetPassword: ctrlWrapper(resetPassword),
 };
