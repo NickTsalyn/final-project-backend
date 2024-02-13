@@ -147,11 +147,13 @@ const changeTheme = async (req, res) => {
   const { _id } = req.user;
   const { theme } = req.body;
   
-  await User.findByIdAndUpdate(_id, { theme });
+  const result = await User.findByIdAndUpdate(_id, { theme });
 
   res.json({
-    message: "Theme updated"
-  });
+    user: {
+      theme: result.theme,
+    }}
+  );
 };
 
 const forgotPassword = async (req, res) => {
