@@ -70,6 +70,10 @@ export const userEditScheme = Joi.object({
 	password: Joi.string().min(6),
 });
 
+export const userChangeThemeSchema = Joi.object({
+    theme: Joi.string().valid(...themeList),
+});
+
 export const userHelpMailScheme = Joi.object({
 	email: Joi.string().required(),
 	comment: Joi.string().required(),
