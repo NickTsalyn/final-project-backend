@@ -51,7 +51,7 @@ const deleteTask = async (req, res) => {
         throw HttpError(404, `Task with id=${id} not found!`);
     };
 
-    res.json({ message: "Task deleted" });
+    res.json({ id });
 };
 
 
