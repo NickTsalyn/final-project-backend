@@ -127,7 +127,7 @@ const editProfile = async (req, res) => {
 const sendNeedHelp = async (req, res) => {
 	const { email, comment } = req.body;
 	// const emailTo = "taskpro.project@gmail.com";
-	const emailTo = "manoiloruslan@gmail.com";
+	const emailTo = "oleksandr.tsyb@ukr.net";
 
 	const helpMessage = {
 		to: emailTo,
@@ -171,7 +171,7 @@ const forgotPassword = async (req, res) => {
 
 	const forgotPasswordEmail = {
 		to: email,
-		from: "ManoiloRuslan@gmail.com",
+		from: "oleksandr.tsyb@ukr.net",
 		subject: "Password Reset Code",
 		text: `Your password reset code is: ${resetToken}`,
 	};
