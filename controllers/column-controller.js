@@ -62,9 +62,7 @@ const deleteColumn = async (req, res) => {
     throw HttpError(404, `Column with id=${id} not found`);
   }
 
-  res.status(204).json({
-    message: "Column removed",
-  });
+  res.json({ id });
 };
 
 export default {
