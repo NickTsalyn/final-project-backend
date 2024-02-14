@@ -50,6 +50,7 @@ export const taskEditSchema = Joi.object({
     description: Joi.string(),
     priority: Joi.string().valid(...priorityList),
     deadline: Joi.string(),
+    column: Joi.string(),
 });
 
 const Task = model("task", taskScheme);

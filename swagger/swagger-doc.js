@@ -1178,6 +1178,9 @@
  *         description:
  *           type: string
  *           example: "It is description for this Task"
+ *         column:
+ *           type: string
+ *           example: "123456789"
  *         deadline:
  *           type: string
  *           example: "25/02/24"
