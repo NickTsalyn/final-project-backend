@@ -1160,6 +1160,9 @@
  *       404:
  *         description: Task not found
  *         content: {}
+ *       409:
+ *         description: Current ID
+ *         content: {}
  */
 /** SCHEMAS for EDITTASK:
  * @swagger
