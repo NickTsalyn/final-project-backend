@@ -31,12 +31,6 @@ const addTask = async (req, res) => {
 const editTask = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
-  const { column } = req.body;
-
-  const current = await Task.findOne({ _id: id, owner });
-  if (column === current.column) {
-    throw HttpError(409, `${column} is the current ID`);
-  }
 
   const result = await Task.findOneAndUpdate({ _id: id, owner }, req.body);
 
