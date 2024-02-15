@@ -16,12 +16,10 @@ const userScheme = new Schema(
 		email: {
 			type: String,
 			match: emailPattern,
-			required: [true, "Email is required"],
 			unique: true,
 		},
 		password: {
 			type: String,
-			required: [true, "Set password for user"],
 			minlength: 6,
 		},
 		resetToken: {
@@ -54,14 +52,14 @@ userScheme.pre("findOneAndUpdate", preUpdate);
 userScheme.post("findOneAndUpdate", handleSaveError);
 
 export const userSignupScheme = Joi.object({
-	name: Joi.string().required(),
-    email: Joi.string().pattern(emailPattern).required(),
-    password: Joi.string().min(6).required(),
+	name: Joi.string(),
+    email: Joi.string().pattern(emailPattern),
+    password: Joi.string().min(6),
 })
 
 export const userSigninScheme = Joi.object({
-    email: Joi.string().pattern(emailPattern).required(),
-    password: Joi.string().min(6).required(),
+    email: Joi.string().pattern(emailPattern),
+    password: Joi.string().min(6),
 })
 
 export const userEditScheme = Joi.object({
@@ -75,8 +73,8 @@ export const userChangeThemeSchema = Joi.object({
 });
 
 export const userHelpMailScheme = Joi.object({
-	email: Joi.string().required(),
-	comment: Joi.string().required(),
+	email: Joi.string(),
+	comment: Joi.string(),
 });
 
 const User = model("user", userScheme);

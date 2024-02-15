@@ -126,8 +126,8 @@ const editProfile = async (req, res) => {
 
 const sendNeedHelp = async (req, res) => {
 	const { email, comment } = req.body;
-	// const emailTo = "taskpro.project@gmail.com";
-	const emailTo = "oleksandr.tsyb@ukr.net";
+	const emailTo = "taskpro.project@gmail.com";
+	// const emailTo = "oleksandr.tsyb@ukr.net";
 
 	const helpMessage = {
 		to: emailTo,
