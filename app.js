@@ -6,7 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { specs } from './swagger/swagger-options.js';
 
 import authRouter from './routes/auth.js';
-import tasksRouter from './routes/task.js';
+import tasksRouter from './routes/task-router.js';
 import boardRouter from './routes/board-router.js';
 import columnRouter from './routes/column-router.js';
 

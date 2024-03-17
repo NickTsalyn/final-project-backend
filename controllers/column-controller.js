@@ -1,27 +1,28 @@
+import Board from "../models/Board.js";
 import Column from "../models/Column.js";
+import Task from "../models/Task.js";
 import { HttpError } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
-import Board from "../models/Board.js";
 
-const getAllColumns = async (req, res) => {
+const addColumn = async (req, res) => {
+  const { id: boardID } = req.params;
   const { _id: owner } = req.user;
 
-  const result = await Column.find({ owner }, "-createdAt -updatedAt").populate(
-    "owner",
-    ["name"]
-  );
+  const existingBoard = await Board.findOne({ _id: boardID });
+  if (!existingBoard) throw HttpError(404, "You trying to add column to unexisting board");
 
-  res.json(result);
+  const newColumn = await Column.create({ ...req.body, boardID, owner });
+
+  existingBoard.columns.push(newColumn._id);
+  await existingBoard.save();
+
+  res.status(201).json(newColumn);
 };
 
 const getColumnByID = async (req, res) => {
   const { id } = req.params;
-  const { _id: owner } = req.user;
 
-  const result = await Column.findOne({ _id: id, owner }).populate("owner", [
-    "name",
-  ]);
-
+  const result = await Column.findOne({ _id: id });
   if (!result) {
     throw HttpError(404, `Column with id=${id} not found!`);
   }
@@ -29,46 +30,47 @@ const getColumnByID = async (req, res) => {
   res.json(result);
 };
 
-const addColumn = async (req, res) => {
+const getAllColumns = async (req, res) => {
   const { _id: owner } = req.user;
-  const { id: id } = req.params;
-
-  const existingBoard = await Board.findOne({ _id: id });
-
-  if (!existingBoard) {
-    throw HttpError(404, "You trying to add column to unexisting board");
-  }
-
-  const result = await Column.create({ ...req.body, owner, board: id });
-  res.status(201).json(result);
+  const result = await Column.find({ owner }, "-createdAt -updatedAt");
+  res.json(result);
 };
 
-const editColumnById = async (req, res) => {
+const editColumn = async (req, res) => {
   const { id } = req.params;
-  const result = await Column.findByIdAndUpdate(id, req.body);
+  const { _id: owner } = req.user;
+  const { title } = req.body;
 
-  if (!result) {
-    throw HttpError(404, `Column with id=${id} not found`);
-  }
-  res.json(result);
+  const column = await Column.findOne({ _id: id, owner });
+
+  if (!column) throw HttpError(404, "You trying to edit unexisting column");
+
+  column.title = title || column.title;
+
+  await column.save();
+
+  res.json(column);
 };
 
 const deleteColumn = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
-  const result = await Column.findOneAndDelete({ _id: id, owner });
 
-  if (!result) {
-    throw HttpError(404, `Column with id=${id} not found`);
-  }
+  const existingColumn = await Column.findOneAndDelete({ _id: id, owner });
+  if (!existingColumn) throw HttpError(404, `Column with id=${id} not found`);
 
-  res.json({ id });
+  await Task.deleteMany({ columnID: id });
+
+  const boardID = existingColumn.boardID;
+  await Board.updateOne({ _id: boardID }, { $pull: { columns: id } });
+
+  res.status(204).json({ message: "Column deleted successfully" });
 };
 
 export default {
-  getAllColumns: ctrlWrapper(getAllColumns),
-  getColumnByID: ctrlWrapper(getColumnByID),
   addColumn: ctrlWrapper(addColumn),
-  editColumnById: ctrlWrapper(editColumnById),
+  getColumnByID: ctrlWrapper(getColumnByID),
+  getAllColumns: ctrlWrapper(getAllColumns),
+  editColumn: ctrlWrapper(editColumn),
   deleteColumn: ctrlWrapper(deleteColumn),
 };

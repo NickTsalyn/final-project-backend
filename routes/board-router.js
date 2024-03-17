@@ -1,16 +1,19 @@
 import express from "express";
-import { authenticate, isEmptyBody, isValidateId, upload } from "../middlewares/index.js";
 import boardsController from "../controllers/boards-controller.js";
+import { authenticate, isEmptyBody, isValidateId, upload } from "../middlewares/index.js";
+import validateBody from "../decorators/validateBody.js";
+import { boardAddSchema, boardEditSchema } from "../models/Board.js";
 
 
 const boardRouter = express.Router();
-boardRouter.use(authenticate);
 
+boardRouter.use(authenticate);
+boardRouter.post("/", upload.single("background"), isEmptyBody, validateBody(boardAddSchema), boardsController.addBoard);
 boardRouter.get("/", boardsController.getAllBoards);
 boardRouter.get("/:id", isValidateId, boardsController.getByID);
-boardRouter.post("/", upload.single("backgroundURL"), isEmptyBody, boardsController.addBoard);
-boardRouter.patch("/:id", isValidateId, isEmptyBody, boardsController.editBoardById);
-boardRouter.delete("/:id", isValidateId, boardsController.deleteBoard);
+boardRouter.put("/:id", isValidateId, isEmptyBody, validateBody(boardEditSchema), boardsController.editBoard);
 
+
+boardRouter.delete("/:id", isValidateId, boardsController.deleteBoard);
 
 export default boardRouter;

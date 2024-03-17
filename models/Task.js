@@ -2,58 +2,62 @@ import Joi from "joi";
 import { Schema, model } from "mongoose";
 import { handleSaveError, preUpdate } from "./hooks.js";
 
-
 const priorityList = ["Without", "Low", "Medium", "High"];
 
 const taskScheme = new Schema(
-    {
-        title: {
-            type: String,
-            required: [true, 'Set title for task']
-        },
-        description: {
-            type: String,
-        },
-        priority: {
-            type: String,
-            enum: priorityList,
-            default: "Without",
-        },
-        deadline: {
-            type: String,
-        },
-        column: {
-            type: String,
-            required: true
-        },
-        owner: {
-            type: Schema.Types.ObjectId,
-            ref: 'user',
-            required: true,
-        },
+  {
+    title: {
+      type: String,
+      required: [true, "Set title for task"],
     },
-    { versionKey: false, timestamps: true }
+
+    description: {
+      type: String,
+    },
+
+    priority: {
+      type: String,
+      enum: priorityList,
+      default: "Without",
+    },
+
+    deadline: {
+      type: String,
+    },
+
+    columnID: {
+      type: Schema.Types.ObjectId,
+      ref: "column",
+      required: true,
+    },
+
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+  },
+  { versionKey: false, timestamps: false }
 );
 
 taskScheme.post("save", handleSaveError);
 taskScheme.pre("findOneAndUpdate", preUpdate);
 
 export const taskAddSchema = Joi.object({
-    title: Joi.string().required(),
-    description: Joi.string(),
-    priority: Joi.string().valid(...priorityList),
-    deadline: Joi.string(),
+  title: Joi.string().max(32).required(),
+  description: Joi.string().max(88),
+  priority: Joi.string().valid(...priorityList),
+  deadline: Joi.string(),
 });
 
 export const taskEditSchema = Joi.object({
-    title: Joi.string(),
-    description: Joi.string(),
-    priority: Joi.string().valid(...priorityList),
-    deadline: Joi.string(),
-    column: Joi.string(),
+  title: Joi.string().max(32),
+  description: Joi.string().max(88),
+  priority: Joi.string().valid(...priorityList),
+  deadline: Joi.string(),
+  columnID: Joi.string(),
 });
 
 const Task = model("task", taskScheme);
-
 
 export default Task;
