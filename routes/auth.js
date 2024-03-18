@@ -11,9 +11,7 @@ authRouter.post("/signin", isEmptyBody, validateBody(userSigninScheme), authCont
 authRouter.post("/signout", authenticate, authController.signout);
 authRouter.get("/current", authenticate, authController.getCurrent);
 authRouter.patch("/changeTheme", authenticate, isEmptyBody, validateBody(userChangeThemeSchema), authController.changeTheme);
-
-authRouter.patch("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
-
+authRouter.put("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
 authRouter.post("/needHelp", authenticate, isEmptyBody, validateBody(userHelpMailScheme), authController.sendNeedHelp);
 authRouter.post("/recovery-mail", isEmptyBody, authController.forgotPassword)
 authRouter.patch("/reset-password", isEmptyBody, authController.resetPassword)

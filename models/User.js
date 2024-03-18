@@ -55,9 +55,9 @@ export const userSigninScheme = Joi.object({
 });
 
 export const userEditScheme = Joi.object({
-  name: Joi.string(),
-  email: Joi.string().pattern(emailPattern),
-  password: Joi.string().min(6),
+  name: Joi.string().optional(),
+  email: Joi.string().pattern(emailPattern).optional(),
+  password: Joi.string().min(6).optional(),
 });
 
 export const userChangeThemeSchema = Joi.object({
