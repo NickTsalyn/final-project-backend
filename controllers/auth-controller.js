@@ -104,7 +104,13 @@ const editProfile = async (req, res) => {
 
   await user.save();
 
-  res.json(user);
+  res.json({
+    user: {
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+    }
+  });
 };
 
 const sendNeedHelp = async (req, res) => {
