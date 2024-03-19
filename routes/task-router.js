@@ -1,19 +1,19 @@
 import express from "express";
-
-import validateBody from "../decorators/validateBody.js";
 import tasksController from "../controllers/tasks-controller.js";
+import validateBody from "../decorators/validateBody.js";
 import { taskAddSchema, taskEditSchema } from "../models/Task.js";
 import { isEmptyBody, authenticate, isValidateId } from "../middlewares/index.js";
-
 
 const tasksRouter = express.Router();
 
 tasksRouter.use(authenticate);
-
-tasksRouter.get('/', tasksController.getAll);
-tasksRouter.post('/:id/addTask', isValidateId, isEmptyBody, validateBody(taskAddSchema), tasksController.addTask);
-tasksRouter.patch('/:id', isValidateId, isEmptyBody, validateBody(taskEditSchema), tasksController.editTask);
+tasksRouter.post('/:id', isValidateId, isEmptyBody, validateBody(taskAddSchema), tasksController.addTask);
+tasksRouter.get('/', tasksController.getAllTasks);
+tasksRouter.put('/:id', isValidateId, isEmptyBody, validateBody(taskEditSchema), tasksController.editTask);
 tasksRouter.delete('/:id', isValidateId, tasksController.deleteTask);
 
+
+
+tasksRouter.patch('/:id/:columnId', isValidateId, isEmptyBody, tasksController.dndUpdate);
 
 export default tasksRouter;

@@ -1,9 +1,8 @@
 import express from "express";
-
+import authController from "../controllers/auth-controller.js";
 import { isEmptyBody, authenticate, upload, resizeAvatar } from "../middlewares/index.js";
 import validateBody from "../decorators/validateBody.js";
 import { userSignupScheme, userSigninScheme, userHelpMailScheme, userEditScheme, userChangeThemeSchema } from "../models/User.js";
-import authController from "../controllers/auth-controller.js";
 
 const authRouter = express.Router();
 
@@ -12,13 +11,9 @@ authRouter.post("/signin", isEmptyBody, validateBody(userSigninScheme), authCont
 authRouter.post("/signout", authenticate, authController.signout);
 authRouter.get("/current", authenticate, authController.getCurrent);
 authRouter.patch("/changeTheme", authenticate, isEmptyBody, validateBody(userChangeThemeSchema), authController.changeTheme);
-authRouter.patch("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
+authRouter.put("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
 authRouter.post("/needHelp", authenticate, isEmptyBody, validateBody(userHelpMailScheme), authController.sendNeedHelp);
 authRouter.post("/recovery-mail", isEmptyBody, authController.forgotPassword)
 authRouter.patch("/reset-password", isEmptyBody, authController.resetPassword)
-
-
-// authRouter.get("/verify/:verificationToken")
-// authRouter.post("/verify", isEmptyBody, validateBody(userEmailScheme))
 
 export default authRouter;
