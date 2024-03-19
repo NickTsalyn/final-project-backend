@@ -8,7 +8,8 @@ const addTask = async (req, res) => {
   const { _id: owner } = req.user;
 
   const existingColumn = await Column.findOne({ _id: columnID });
-  if (!existingColumn) throw HttpError(404, "You trying to add task to unexisting column");
+  if (!existingColumn)
+    throw HttpError(404, "You trying to add task to unexisting column");
 
   const newTask = await Task.create({ ...req.body, columnID, owner });
 
@@ -37,10 +38,19 @@ const editTask = async (req, res) => {
   task.description = description || task.description;
   task.priority = priority || task.priority;
   task.deadline = deadline || task.deadline;
-  task.columnID = columnID || task.columnID;
+  
+  if (columnID !== task.columnID) {
+    await Column.updateOne({ _id: task.columnID }, { $pull: { tasks: id } });
+
+    const newColumn = await Column.findOne({ _id: columnID, owner });
+    newColumn.tasks.push(id);
+    await newColumn.save();
+  } else {
+    task.columnID = columnID || task.columnID;
+  }
 
   await task.save();
-  
+
   res.json(task);
 };
 
@@ -59,25 +69,26 @@ const deleteTask = async (req, res) => {
   res.status(204).json({ message: "Task deleted successfully" });
 };
 
-
-
 // ---------------------------------------------------------
 
 const dndUpdate = async (req, res) => {
   const { id, columnId: prevColumn } = req.params;
   const { currentColumnId, newTaskIdx } = req.body;
 
-  const result = await Task.findByIdAndUpdate(id, { column: currentColumnId }, { new: true });
-  
+  const result = await Task.findByIdAndUpdate(
+    id,
+    { column: currentColumnId },
+    { new: true }
+  );
+
   if (!result) {
     throw HttpError(404, `Task with id=${id} not found`);
-  };
+  }
 
   res.json({ result, prevColumn, newTaskIdx });
 };
 
 // --------------------------------------------------------------
-
 
 export default {
   addTask: ctrlWrapper(addTask),

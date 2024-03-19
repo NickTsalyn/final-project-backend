@@ -12,8 +12,6 @@ boardRouter.post("/", upload.single("background"), isEmptyBody, validateBody(boa
 boardRouter.get("/", boardsController.getAllBoards);
 boardRouter.get("/:id", isValidateId, boardsController.getByID);
 boardRouter.put("/:id", isValidateId, isEmptyBody, validateBody(boardEditSchema), boardsController.editBoard);
-
-
 boardRouter.delete("/:id", isValidateId, boardsController.deleteBoard);
 
 export default boardRouter;
