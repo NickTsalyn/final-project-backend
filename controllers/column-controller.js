@@ -22,7 +22,13 @@ const addColumn = async (req, res) => {
 const getColumnByID = async (req, res) => {
   const { id } = req.params;
 
-  const result = await Column.findOne({ _id: id });
+  const result = await Column.findOne({ _id: id }).populate("tasks", [
+    "title",
+    "description",
+    "priority",
+    "deadline"
+  ]);
+
   if (!result) {
     throw HttpError(404, `Column with id=${id} not found!`);
   }

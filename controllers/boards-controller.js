@@ -16,7 +16,9 @@ const getByID = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
 
-  const result = await Board.findOne({ _id: id, owner });
+  const result = await Board.findOne({ _id: id, owner }).populate("columns", [
+    "title",
+  ]);
 
   if (!result) throw HttpError(404, `Board with id=${id} not found!`);
 
