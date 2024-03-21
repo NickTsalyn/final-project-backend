@@ -38,7 +38,13 @@ const getColumnByID = async (req, res) => {
 
 const getAllColumns = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Column.find({ owner }, "-createdAt -updatedAt");
+  const result = await Column.find({ owner }).populate("tasks", [
+    "title",
+    "description",
+    "priority",
+    "deadline"
+  ]);
+  
   res.json(result);
 };
 
@@ -70,7 +76,7 @@ const deleteColumn = async (req, res) => {
   const boardID = existingColumn.boardID;
   await Board.updateOne({ _id: boardID }, { $pull: { columns: id } });
 
-  res.status(204).json({ message: "Column deleted successfully" });
+  res.status(204).json({ id });
 };
 
 export default {

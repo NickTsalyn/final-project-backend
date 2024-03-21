@@ -27,7 +27,9 @@ const getByID = async (req, res) => {
 
 const getAllBoards = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Board.find({ owner });
+  const result = await Board.find({ owner }).populate("columns", [
+    "title",
+  ]);
   res.json(result);
 };
 
