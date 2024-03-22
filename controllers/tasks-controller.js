@@ -38,20 +38,33 @@ const editTask = async (req, res) => {
   task.description = description || task.description;
   task.priority = priority || task.priority;
   task.deadline = deadline || task.deadline;
-  
-  if (columnID !== task.columnID) {
-    await Column.updateOne({ _id: task.columnID }, { $pull: { tasks: id } });
-
-    const newColumn = await Column.findOne({ _id: columnID, owner });
-    newColumn.tasks.push(id);
-    await newColumn.save();
-  } else {
-    task.columnID = columnID || task.columnID;
-  }
+  task.columnID = columnID || task.columnID;
 
   await task.save();
 
   res.json(task);
+};
+
+const changeColumn = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const { columnID: newColumnID } = req.body;
+  
+  const task = await Task.findOne({ _id: id, owner });
+  if (!task) throw HttpError(404, "You trying to change unexisting task");
+
+  const prevColumnID = task.columnID;
+  await Column.updateOne({ _id: prevColumnID }, { $pull: { tasks: id } });
+
+  const newColumn = await Column.findOne({ _id: newColumnID, owner });
+
+  task.columnID = newColumnID;
+  await task.save();
+
+  newColumn.tasks.push(id);
+  await newColumn.save();
+
+  res.json({ [task._id]: id, prevColumnID, newColumnID });
 };
 
 const deleteTask = async (req, res) => {
@@ -66,7 +79,7 @@ const deleteTask = async (req, res) => {
 
   await Column.updateOne({ _id: columnID }, { $pull: { tasks: id } });
 
-  res.status(204).json({ message: "Task deleted successfully" });
+  res.json({ id, columnID });
 };
 
 // ---------------------------------------------------------
@@ -94,6 +107,7 @@ export default {
   addTask: ctrlWrapper(addTask),
   getAllTasks: ctrlWrapper(getAllTasks),
   editTask: ctrlWrapper(editTask),
+  changeColumn: ctrlWrapper(changeColumn),
   deleteTask: ctrlWrapper(deleteTask),
   dndUpdate: ctrlWrapper(dndUpdate),
 };
