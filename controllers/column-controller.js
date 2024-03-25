@@ -74,9 +74,9 @@ const deleteColumn = async (req, res) => {
   await Task.deleteMany({ columnID: id });
 
   const boardID = existingColumn.boardID;
-  await Board.updateOne({ _id: boardID }, { $pull: { columns: id } });
+  await Board.findByIdAndUpdate({ _id: boardID }, { $pull: { columns: id } });
 
-  res.status(204).json({ id });
+  res.json({ id });
 };
 
 export default {

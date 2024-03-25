@@ -12,9 +12,6 @@ tasksRouter.get('/', tasksController.getAllTasks);
 tasksRouter.put('/:id', isValidateId, isEmptyBody, validateBody(taskEditSchema), tasksController.editTask);
 tasksRouter.patch('/:id', isValidateId, isEmptyBody, validateBody(taskChangeColumnSchema), tasksController.changeColumn);
 tasksRouter.delete('/:id', isValidateId, tasksController.deleteTask);
-
-
-
-tasksRouter.patch('/:id/:columnId', isValidateId, isEmptyBody, tasksController.dndUpdate);
+tasksRouter.patch('/dnd/:id', isValidateId, isEmptyBody, tasksController.dndMovement);
 
 export default tasksRouter;
