@@ -38,20 +38,33 @@ const editTask = async (req, res) => {
   task.description = description || task.description;
   task.priority = priority || task.priority;
   task.deadline = deadline || task.deadline;
-  
-  if (columnID !== task.columnID) {
-    await Column.updateOne({ _id: task.columnID }, { $pull: { tasks: id } });
-
-    const newColumn = await Column.findOne({ _id: columnID, owner });
-    newColumn.tasks.push(id);
-    await newColumn.save();
-  } else {
-    task.columnID = columnID || task.columnID;
-  }
+  task.columnID = columnID || task.columnID;
 
   await task.save();
 
   res.json(task);
+};
+
+const changeColumn = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const { columnID: newColumnID } = req.body;
+
+  const task = await Task.findOne({ _id: id, owner });
+  if (!task) throw HttpError(404, "You trying to change unexisting task");
+
+  const prevColumnID = task.columnID;
+  await Column.updateOne({ _id: prevColumnID }, { $pull: { tasks: id } });
+
+  const newColumn = await Column.findOne({ _id: newColumnID, owner });
+
+  task.columnID = newColumnID;
+  await task.save();
+
+  newColumn.tasks.push(id);
+  await newColumn.save();
+
+  res.json({ prevColumnID, newColumnID, task });
 };
 
 const deleteTask = async (req, res) => {
@@ -66,34 +79,34 @@ const deleteTask = async (req, res) => {
 
   await Column.updateOne({ _id: columnID }, { $pull: { tasks: id } });
 
-  res.status(204).json({ message: "Task deleted successfully" });
+  res.json({ id, columnID });
 };
 
-// ---------------------------------------------------------
+const dndMovement = async (req, res) => {
+  const { id } = req.params;
+  const { _id: owner } = req.user;
+  const { finishTaskIndex, startColumnID, finishColumnID } = req.body;
 
-const dndUpdate = async (req, res) => {
-  const { id, columnId: prevColumn } = req.params;
-  const { currentColumnId, newTaskIdx } = req.body;
+  const task = await Task.findById({ _id: id, owner });
+  if (!task) throw HttpError(404, "You trying to change unexisting task");
+  
+  await Column.findByIdAndUpdate({ _id: startColumnID }, { $pull: { tasks: id } });
+  const finishColumn = await Column.findById({ _id: finishColumnID, owner });
+  
+  task.columnID = finishColumnID;
+  await task.save();
 
-  const result = await Task.findByIdAndUpdate(
-    id,
-    { column: currentColumnId },
-    { new: true }
-  );
+  finishColumn.tasks.splice(finishTaskIndex, 0, task);
+  await finishColumn.save();
 
-  if (!result) {
-    throw HttpError(404, `Task with id=${id} not found`);
-  }
-
-  res.json({ result, prevColumn, newTaskIdx });
+  res.json({ task, finishTaskIndex, startColumnID, finishColumnID });
 };
-
-// --------------------------------------------------------------
 
 export default {
   addTask: ctrlWrapper(addTask),
   getAllTasks: ctrlWrapper(getAllTasks),
   editTask: ctrlWrapper(editTask),
+  changeColumn: ctrlWrapper(changeColumn),
   deleteTask: ctrlWrapper(deleteTask),
-  dndUpdate: ctrlWrapper(dndUpdate),
+  dndMovement: ctrlWrapper(dndMovement),
 };

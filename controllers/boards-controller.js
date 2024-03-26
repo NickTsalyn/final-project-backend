@@ -16,9 +16,15 @@ const getByID = async (req, res) => {
   const { id } = req.params;
   const { _id: owner } = req.user;
 
-  const result = await Board.findOne({ _id: id, owner }).populate("columns", [
-    "title",
-  ]);
+  const result = await Board.findOne({ _id: id, owner }).populate({
+    path: "columns",
+    select: "title boardID owner",
+
+    populate: {
+      path: "tasks",
+      select: "title description priority deadline columnID owner",
+    },
+  });
 
   if (!result) throw HttpError(404, `Board with id=${id} not found!`);
 
@@ -27,9 +33,7 @@ const getByID = async (req, res) => {
 
 const getAllBoards = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Board.find({ owner }).populate("columns", [
-    "title",
-  ]);
+  const result = await Board.find({ owner }).populate("columns", ["title"]);
   res.json(result);
 };
 

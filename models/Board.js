@@ -15,6 +15,7 @@ const boardScheme = new Schema(
 
     icon: {
       type: String,
+      default: 'icon-Project',
     },
 
     columns: [
