@@ -109,7 +109,7 @@ const editProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       avatar: user.avatar,
-    }
+    },
   });
 };
 
@@ -147,9 +147,7 @@ const forgotPassword = async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
+  if (!user) return res.status(404).json({ message: "User not found" });
 
   const resetToken = generateRandomCode(24);
   const resetTokenExpiration = Date.now() + 3600000;
@@ -175,9 +173,8 @@ const resetPassword = async (req, res) => {
 
   const user = await User.findOne({ resetToken: resetToken });
 
-  if (!user || user.resetTokenExpiration < Date.now()) {
+  if (!user || user.resetTokenExpiration < Date.now())
     return res.status(400).json({ message: "Invalid or expired reset code" });
-  }
 
   const hashPassword = await bcrypt.hash(newPassword, 10);
   user.password = hashPassword;

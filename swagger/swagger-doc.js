@@ -66,10 +66,11 @@
  *         email:
  *           type: string
  *           format: email
+ *           example: AlvaroCapi@example.com
  *         password:
  *           type: string
  *           minLength: 6
- *           example: qwerty123
+ *           example: Zxcvb123$
  *       required:
  *         - email
  *         - password
@@ -89,6 +90,7 @@
  *            email:
  *              type: string
  *              format: email
+ *              example: AlvaroCapi@example.com
  */
 
 /** SIGNIN
@@ -127,9 +129,11 @@
  *         email:
  *           type: string
  *           format: email
+ *           example: AlvaroCapi@example.com
  *         password:
  *           type: string
- *           example: qwerty123
+ *           minLength: 6
+ *           example: Zxcvb123$
  *       required:
  *         - email
  *         - password
@@ -149,12 +153,13 @@
  *            email:
  *              type: string
  *              format: email
+ *              example: AlvaroCapi@example.com
  *            theme:
  *              type: string
  *              example: violet
  *            avatar:
  *              type: string
- *              example: "/avatars/example_avatar.jpg"
+ *              example: "/avatars/alvaro_avatar.jpg"
  */
 
 /** SIGNOUT
@@ -217,6 +222,7 @@
  *         email:
  *           type: string
  *           format: email
+ *           example: AlvaroCapi@example.com
  *         theme:
  *           type: string
  *           example: violet
@@ -225,19 +231,19 @@
  *           example: 1234567890
  *         avatar:
  *           type: string
- *           example: "/avatars/example_avatar.jpg"
+ *           example: "/avatars/alvaro_avatar.jpg"
  */
 
 /** EDIT
  * @swagger
  * /api/users/edit:
- *   patch:
+ *   put:
  *     tags: [Authentication]
- *     summary: "Edit user profile"
+ *     summary: "Edit user profile 🟢"
  *     security:
  *       - Bearer: []
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         multipart/form-data:
  *           schema:
@@ -273,13 +279,15 @@
  *         email:
  *           type: string
  *           format: email
- *           example: "AlvaroCapibara@example.com"
+ *           example: AlvaroCapi@example.com
  *         password:
  *           type: string
  *           minLength: 6
+ *           example: Zxcvb123$
  *         avatar:
  *           type: string
  *           format: binary
+ *       required: []
  * 
  * 
  *     editResponse:
@@ -290,13 +298,13 @@
  *           properties:
  *             name:
  *               type: string
- *               example: "John Cena"
+ *               example: Alvaro Capibara
  *             email:
  *               type: string
- *               example: "AlvaroCapibara@example.com"
+ *               example: AlvaroCapi@example.com
  *             avatar:
  *               type: string
- *               example: "/profileAvatar/example_avatar.jpg"
+ *               example: "/profileAvatar/alvaro_avatar.jpg"
  */
 
 /** CHANGETHEME
@@ -342,9 +350,9 @@
  *     changeThemeResponse:
  *       type: object
  *       properties:
- *         message:
+ *         theme:
  *           type: string
- *           example: "Theme updated"
+ *           example: dark
  */
 
 /** NEEDHELP
@@ -352,7 +360,7 @@
  * /api/users/needHelp:
  *   post:
  *     tags: [Authentication]
- *     summary: "Send help request"
+ *     summary: "Send help request 🟢"
  *     security:
  *       - Bearer: []
  *     requestBody:
@@ -397,58 +405,92 @@
  *         - comment
  */
 
-
-
-/** GETALLBOARDS
+/**FORGOTPASSWORD
  * @swagger
- * /api/boards:
- *   get:
- *     tags: [Board]
- *     summary: "Get all boards for the current user 🟢"
- *     security:
- *       - Bearer: []
+ * /api/users/recovery-mail:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: "Send password recovery email 🟢"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: AlvaroCapi@example.com
  *     responses:
  *       200:
- *         description: Successful operation
+ *         description: Password reset code sent successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/allBoardsResponse'
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password reset code sent successfully
  *       404:
- *         description: No boards added for the current user
- *         content: {}
- *       401:
- *         description: Unauthorized (invalid access token)
- *         content: {}
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User not found
  */
-/** SCHEMAS for GETALLBOARDS:
+
+/**RESETPASSWORD
  * @swagger
- * components:
- *   schemas:
- *     allBoardsResponse:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           example: "1234567890"
- *         title:
- *           type: string
- *           example: "Board 1"
- *         backgroundURL:
- *           type: string
- *           example: "/backgrounds/board1.jpg"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Alvaro Capibara"
+ * /api/users/reset-password:
+ *   patch:
+ *     tags: [Authentication]
+ *     summary: "Reset user's password using the provided reset token 🟢"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               resetToken:
+ *                 type: string
+ *                 description: The reset token sent to the user's email
+ *                 example: "abcdef123456"
+ *               newPassword:
+ *                 type: string
+ *                 minLength: 6
+ *                 description: The new password to set
+ *                 example: Zxcvb123$
+ *     responses:
+ *       200:
+ *         description: Password successfully changed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password successfully changed
+ *       400:
+ *         description: Invalid or expired reset code
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid or expired reset code
  */
+
+
 
 /** ADDBOARD
  * @swagger
@@ -488,15 +530,14 @@
  *         title:
  *           type: string
  *           example: "New Board"
- *         backgroundURL:
+ *         background:
  *           type: string
  *           example: "/backgrounds/new_board.jpg"
- *         iconURL:
+ *         icon:
  *           type: string
- *           example: "/icon/new_iconURL.jpg"
+ *           example: "/icon/new_icon.jpg"
  *       required:
  *         - title
- *         - backgroundURL
  * 
  * 
  *     addBoardResponse:
@@ -508,21 +549,85 @@
  *         title:
  *           type: string
  *           example: "New Board"
+ *         columns:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 example: "ObjectId"
+ *               ref:
+ *                 type: string
+ *                 example: "column"
  *         backgroundURL:
  *           type: string
  *           example: "/backgrounds/new_board.jpg"
  *         iconURL:
  *           type: string
- *           example: "/icon/new_iconURL.jpg"
+ *           example: "/icon/new_icon.jpg"
  *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "123456789"
- *             name:
- *               type: string
- *               example: Alvaro Capibara
+ *           type: string
+ *           example: "123456789"
+ */
+
+/** GETALLBOARDS
+ * @swagger
+ * /api/boards:
+ *   get:
+ *     tags: [Board]
+ *     summary: "Get all boards for the current user 🟢"
+ *     security:
+ *       - Bearer: []
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/allBoardsResponse'
+ *       404:
+ *         description: No boards added for the current user
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ */
+/** SCHEMAS for GETALLBOARDS:
+ * @swagger
+ * components:
+ *   schemas:
+ *     allBoardsResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "My New Board"
+ *         columns:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "My Column"
+ *               _id:
+ *                 type: string
+ *                 example: "0123456789"
+ *         background:
+ *           type: string
+ *           example: "/backgrounds/board1.jpg"
+ *         icon:
+ *           type: string
+ *           example: "/icon/new_icon.jpg"
+ *         owner:
+ *           type: string
+ *           example: "1234567890"
  */
 
 /** GETBOARD
@@ -544,7 +649,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/boardResponse'
+ *               $ref: '#/components/schemas/boardByIdResponse'
  *       400:
  *         description: Bad request (invalid ID format)
  *         content: {}
@@ -560,7 +665,7 @@
  * components:
  *   schemas:
  * 
- *     boardResponse:
+ *     boardByIdResponse:
  *       type: object
  *       properties:
  *         _id:
@@ -568,28 +673,65 @@
  *           example: "1234567890"
  *         title:
  *           type: string
- *           example: "Board 1"
- *         backgroundURL:
+ *           example: "My 1st Board"
+ *         columns:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: "0123456789"
+ *               title:
+ *                 type: string
+ *                 example: "My 1st Column"
+ *               tasks:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "0123456789"
+ *                     title:
+ *                       type: string
+ *                       example: "My 1st Task"
+ *                     description:
+ *                       type: string
+ *                       example: "My 1st Task's description"
+ *                     priority:
+ *                       type: string
+ *                       example: "Without"
+ *                     deadline:
+ *                       type: string
+ *                       example: "24/04/2024"
+ *                     columnID:
+ *                       type: string
+ *                       example: "0123456789"
+ *                     owner:
+ *                       type: string
+ *                       example: "0123456789"
+ *               boardID:
+ *                 type: string
+ *                 example: "0123456789"
+ *               owner:
+ *                 type: string
+ *                 example: "0123456789"
+ *         background:
  *           type: string
- *           example: "/backgrounds/board1.jpg"
- *         iconURL:
+ *           example: "/backgrounds/example_board.jpg"
+ *         icon:
  *           type: string
- *           example: "/icon/example_iconURL.jpg"
+ *           example: "/icon/example_icon.jpg"
  *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: Alvaro Capibara
+ *           type: string
+ *           example: "1234567890"
  */
 
 /** EDITBOARD
  * @swagger
  * /api/boards/{id}:
- *   patch:
+ *   put:
  *     tags: [Board]
  *     summary: "Edit board by ID 🟢"
  *     security:
@@ -600,9 +742,9 @@
  *         required: true
  *         description: ID of the board to edit
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/boardEditRequest'
  *     responses:
@@ -611,7 +753,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/boardResponse'
+ *               $ref: '#/components/schemas/boardEditResponse'
  *       400:
  *         description: Bad request (invalid ID format or request body)
  *         content: {}
@@ -633,15 +775,75 @@
  *         title:
  *           type: string
  *           example: "Updated Board Title"
- *         backgroundURL:
+ *         background:
  *           type: string
- *           example: "/backgrounds/updated_board.jpg"
- *         iconURL:
+ *           example: "/backgrounds/updated_background.jpg"
+ *         icon:
  *           type: string
- *           example: "/icon/updated_iconURL.jpg"
- *       required:
- *         - title
- *         - backgroundURL
+ *           example: "/icon/updated_icon.jpg"
+ *       required: []
+ * 
+ *     boardEditResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "My 1st Board"
+ *         columns:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: "0123456789"
+ *               title:
+ *                 type: string
+ *                 example: "My 1st Column"
+ *               tasks:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "0123456789"
+ *                     title:
+ *                       type: string
+ *                       example: "My 1st Task"
+ *                     description:
+ *                       type: string
+ *                       example: "My 1st Task's description"
+ *                     priority:
+ *                       type: string
+ *                       example: "Without"
+ *                     deadline:
+ *                       type: string
+ *                       example: "24/04/2024"
+ *                     columnID:
+ *                       type: string
+ *                       example: "0123456789"
+ *                     owner:
+ *                       type: string
+ *                       example: "0123456789"
+ *               boardID:
+ *                 type: string
+ *                 example: "0123456789"
+ *               owner:
+ *                 type: string
+ *                 example: "0123456789"
+ *         background:
+ *           type: string
+ *           example: "/backgrounds/example_board.jpg"
+ *         icon:
+ *           type: string
+ *           example: "/icon/example_icon.jpg"
+ *         owner:
+ *           type: string
+ *           example: "1234567890"
  */
 
 /** DELETEBOARD
@@ -667,7 +869,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Board removed"
+ *                   example: "Board deleted successfully"
  *       400:
  *         description: Bad request (invalid ID format)
  *         content: {}
@@ -680,6 +882,76 @@
  */
 
 
+
+/** ADDCOLUMN
+ * @swagger
+ * /api/columns/{id}:
+ *   post:
+ *     tags: [Column]
+ *     summary: "Add column to a board 🟢"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Board ID to add a column
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/addColumnScheme'
+ *     responses:
+ *       201:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/columnResponse'
+ *       400:
+ *         description: Bad request (invalid board ID or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Board not found
+ *         content: {}
+ */
+/** SCHEMAS for ADDCOLUMN:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     addColumnScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "New Column"
+ * 
+ * 
+ *     columnResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "My New Column"
+ *         tasks:
+ *           type: array
+ *           items:
+ *             type: object
+ *         boardID:
+ *           type: string
+ *           example: "1234567890"
+ *         owner:
+ *           type: string
+ *           example: "12345678910"
+ */
 
 /** GETALLCOLUMNS
  * @swagger
@@ -722,22 +994,32 @@
  *           title:
  *             type: string
  *             example: "Column 1"
- *           board:
+ *           tasks:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "0123456789"
+ *                 title:
+ *                   type: string
+ *                   example: "My 1st Task"
+ *                 description:
+ *                   type: string
+ *                   example: "My 1st Task's description"
+ *                 priority:
+ *                   type: string
+ *                   example: "Without"
+ *                 deadline:
+ *                   type: string
+ *                   example: "24/04/2024"
+ *           boardID:
  *             type: string
  *             example: "123456789"
  *           owner:
- *             type: object
- *             properties:
- *               _id:
- *                 type: string
- *                 example: "123456789"
- *               name:
- *                 type: string
- *                 example: "Alvaro Capibara"
- *       required:
- *         - _id
- *         - title
- *         - owner
+ *             type: string
+ *             example: "1234567890"
  */
 
 /** GETCOLUMN
@@ -784,93 +1066,38 @@
  *         title:
  *           type: string
  *           example: "Column 1"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Alvaro Capibara"
- */
-
-/** ADDCOLUMN
- * @swagger
- * /api/columns/{boardId}/addColumn:
- *   post:
- *     tags: [Column]
- *     summary: "Add column to a board 🟢"
- *     security:
- *       - Bearer: []
- *     parameters:
- *       - in: path
- *         name: boardId
- *         required: true
- *         description: ID of the board to add the column to
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/addColumnScheme'
- *     responses:
- *       201:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/columnResponse'
- *       400:
- *         description: Bad request (invalid board ID or request body)
- *         content: {}
- *       401:
- *         description: Unauthorized (invalid access token)
- *         content: {}
- *       404:
- *         description: Board not found
- *         content: {}
- */
-/** SCHEMAS for ADDCOLUMN:
- * @swagger
- * components:
- *   schemas:
- * 
- *     addColumnScheme:
- *       type: object
- *       properties:
- *         title:
+ *         tasks:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *                 example: "0123456789"
+ *               title:
+ *                 type: string
+ *                 example: "My 1st Task"
+ *               description:
+ *                 type: string
+ *                 example: "My 1st Task's description"
+ *               priority:
+ *                 type: string
+ *                 example: "Without"
+ *               deadline:
+ *                 type: string
+ *                 example: "24/04/2024"
+ *         boardID:
  *           type: string
- *           example: "New Column Title"
- * 
- * 
- *     columnResponse:
- *       type: object
- *       properties:
- *         _id:
+ *           example: "123456789"
+ *         owner:
  *           type: string
  *           example: "1234567890"
- *         title:
- *           type: string
- *           example: "New Column Title"
- *         board:
- *           type: string
- *           example: "1234567890"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Jhon Cena"
  */
 
 /** EDITCOLUMN
  * @swagger
  * /api/columns/{id}:
- *   patch:
+ *   put:
  *     tags: [Column]
  *     summary: "Edit column by ID 🟢"
  *     security:
@@ -914,26 +1141,6 @@
  *         title:
  *           type: string
  *           example: "Updated Column Title"
- * 
- * 
- *     columnResponse:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           example: "1234567890"
- *         title:
- *           type: string
- *           example: "Updated Column Title"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Alvaro Capibara"
  */
 
 /** DELETECOLUMN
@@ -957,9 +1164,9 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 _id:
  *                   type: string
- *                   example: "Column removed"
+ *                   example: "122333444455555"
  *       400:
  *         description: Bad request (invalid ID format)
  *         content: {}
@@ -972,6 +1179,94 @@
  */
 
 
+
+/** ADDTASK
+ * @swagger
+ * /api/tasks/{id}:
+ *   post:
+ *     tags: [Task]
+ *     summary: "Add task to a column 🟢"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Column ID to add a task
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/addTaskScheme'
+ *     responses:
+ *       201:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/taskResponse'
+ *       400:
+ *         description: Bad request (invalid column ID or request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Column not found
+ *         content: {}
+ */
+/** SCHEMAS for ADDTASK:
+ * @swagger
+ * components:
+ *   schemas:
+ * 
+ *     addTaskScheme:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "My New Task"
+ *         priority:
+ *           type: string
+ *           enum: ["Without", "Low", "Medium", "High"]
+ *           default: "Without"
+ *         description:
+ *           type: string
+ *           example: "It is description for this Task"
+ *         deadline:
+ *           type: string
+ *           example: "24/04/2024"
+ *       required:
+ *         - title
+ * 
+ * 
+ *     taskResponse:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "1234567890"
+ *         title:
+ *           type: string
+ *           example: "My New Task"
+ *         priority:
+ *           type: string
+ *           example: "Low"
+ *         description:
+ *           type: string
+ *           example: "It is description for this Task"
+ *         deadline:
+ *           type: string
+ *           example: "24/02/24"
+ *         columnID:
+ *           type: string
+ *           example: "0987654321"
+ *         owner:
+ *           type: string
+ *           example: "1234567890"
+ * 
+ */
 
 /** GETALLTASKS
  * @swagger
@@ -1010,125 +1305,29 @@
  *             example: "1234567890"
  *           title:
  *             type: string
- *             example: "Task 1"
+ *             example: "My Task 1"
+ *           description:
+ *             type: string
+ *             example: "It is description for this Task"
  *           priority:
  *             type: string
- *             enum: ["Without", "Low", "Medium", "High"]
- *             default: "Without"
  *             example: "Low"
  *           deadline:
  *             type: string
  *             example: "24/02/24"
- *           column:
+ *           columnID:
  *             type: string
  *             example: "1234567890"
  *           owner:
- *             type: object
- *             properties:
- *               _id:
- *                 type: string
- *                 example: "1234567890"
- *               name:
- *                 type: string
- *                 example: "Alvaro Capibara"
- */
-
-/** ADDTASK
- * @swagger
- * /api/tasks/{columnId}/addTask:
- *   post:
- *     tags: [Task]
- *     summary: "Add task to a column 🟢"
- *     security:
- *       - Bearer: []
- *     parameters:
- *       - in: path
- *         name: columnId
- *         required: true
- *         description: ID of the column to add the task to
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/addTaskScheme'
- *     responses:
- *       201:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/taskResponse'
- *       400:
- *         description: Bad request (invalid column ID or request body)
- *         content: {}
- *       401:
- *         description: Unauthorized (invalid access token)
- *         content: {}
- *       404:
- *         description: Column not found
- *         content: {}
- */
-/** SCHEMAS for ADDTASK:
- * @swagger
- * components:
- *   schemas:
+ *             type: string
+ *             example: "123456789032"
  * 
- *     addTaskScheme:
- *       type: object
- *       properties:
- *         title:
- *           type: string
- *           example: "New Task Title"
- *         priority:
- *           type: string
- *           enum: ["Without", "Low", "Medium", "High"]
- *           default: "Without"
- *         description:
- *           type: string
- *           example: "It is description for this Task"
- *         deadline:
- *           type: string
- *           example: "24/02/24"
- * 
- * 
- *     taskResponse:
- *       type: object
- *       properties:
- *         _id:
- *           type: string
- *           example: "1234567890"
- *         title:
- *           type: string
- *           example: "New Task Title"
- *         priority:
- *           type: string
- *           enum: ["Without", "Low", "Medium", "High"]
- *           default: "Without"
- *         description:
- *           type: string
- *           example: "It is description for this Task"
- *         deadline:
- *           type: string
- *           example: "24/02/24"
- *         column:
- *           type: string
- *           example: "0987654321"
- *         owner:
- *           type: object
- *           properties:
- *             _id:
- *               type: string
- *               example: "1234567890"
- *             name:
- *               type: string
- *               example: "Jhon Cena"
  */
 
 /** EDITTASK
  * @swagger
  * /api/tasks/{id}:
- *   patch:
+ *   put:
  *     tags: [Task]
  *     summary: "Edit task by ID 🟢"
  *     security:
@@ -1180,13 +1379,152 @@
  *           enum: ["Without", "Low", "Medium", "High"]
  *         description:
  *           type: string
- *           example: "It is description for this Task"
- *         column:
- *           type: string
- *           example: "123456789"
+ *           example: "It is the updated description for this Task"
  *         deadline:
  *           type: string
- *           example: "25/02/24"
+ *           example: "31/04/25"
+ * 
+ */
+
+/**CHANGECOLUMN
+ * @swagger
+ * /api/tasks/{id}:
+ *   patch:
+ *     tags: [Task]
+ *     summary: "Change column of a task 🟢"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the task to change
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/taskChangeColumnSchema'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/taskChangeColumnResponse'
+ *       400:
+ *         description: Bad request (invalid request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Task not found
+ *         content: {}
+ */
+/**SCHEMAS for CHANGECOLUMN
+ * @swagger
+ * components:
+ *   schemas:
+ *     taskChangeColumnSchema:
+ *       type: object
+ *       properties:
+ *         columnID:
+ *           type: string
+ *           description: ID of the new column
+ *           example: "1234567890"
+ *       required:
+ *         - columnID
+ * 
+ *     taskChangeColumnResponse:
+ *       type: object
+ *       properties:
+ *         prevColumnID:
+ *           type: string
+ *           description: ID of the previous column
+ *           example: "0987654321"
+ *         newColumnID:
+ *           type: string
+ *           description: ID of the new column
+ *           example: "1234567890"
+ *         task:
+ *           $ref: '#/components/schemas/taskResponse'
+ */
+
+/**DnDMOVEMENT
+ * @swagger
+ * /api/tasks/dnd/{id}:
+ *   patch:
+ *     tags: [Task]
+ *     summary: "Move task using DnD 🟢"
+ *     security:
+ *       - Bearer: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the task to move
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/dndMovementSchema'
+ *     responses:
+ *       200:
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/dndMovementResponse'
+ *       400:
+ *         description: Bad request (invalid request body)
+ *         content: {}
+ *       401:
+ *         description: Unauthorized (invalid access token)
+ *         content: {}
+ *       404:
+ *         description: Task not found
+ *         content: {}
+ */
+/**SCHEMAS for DnDMOVEMENT
+ * @swagger
+ * components:
+ *   schemas:
+ *     dndMovementSchema:
+ *       type: object
+ *       properties:
+ *         finishTaskIndex:
+ *           type: integer
+ *           description: Index where task should be placed in the new column
+ *           example: 0
+ *         startColumnID:
+ *           type: string
+ *           description: ID of the column from which the task is moved
+ *           example: "69693232161677777"
+ *         finishColumnID:
+ *           type: string
+ *           description: ID of the column to which the task is moved
+ *           example: "886988693311442525"
+ *       required:
+ *         - finishTaskIndex
+ *         - startColumnID
+ *         - finishColumnID
+ * 
+ *     dndMovementResponse:
+ *       type: object
+ *       properties:
+ *         task:
+ *           $ref: '#/components/schemas/taskResponse'
+ *         finishTaskIndex:
+ *           type: integer
+ *           example: 3
+ *         startColumnID:
+ *           type: string
+ *           example: "69693232161677777"
+ *         finishColumnID:
+ *           type: string
+ *           example: "886988693311442525"
  */
 
 /** DELETETASK
@@ -1210,9 +1548,12 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 id:
  *                   type: string
- *                   example: "Task deleted"
+ *                   example: "012233344444555555"
+ *                 columnID:
+ *                   type: string
+ *                   example: "333444445555556969"
  *       400:
  *         description: Bad request (invalid ID format)
  *         content: {}
@@ -1223,4 +1564,3 @@
  *         description: Task not found
  *         content: {}
  */
-

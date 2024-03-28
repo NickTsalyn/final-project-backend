@@ -29,9 +29,7 @@ const getColumnByID = async (req, res) => {
     "deadline"
   ]);
 
-  if (!result) {
-    throw HttpError(404, `Column with id=${id} not found!`);
-  }
+  if (!result) throw HttpError(404, `Column with id=${id} not found!`);
 
   res.json(result);
 };

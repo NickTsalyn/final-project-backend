@@ -8,8 +8,7 @@ const addTask = async (req, res) => {
   const { _id: owner } = req.user;
 
   const existingColumn = await Column.findOne({ _id: columnID });
-  if (!existingColumn)
-    throw HttpError(404, "You trying to add task to unexisting column");
+  if (!existingColumn) throw HttpError(404, "You trying to add task to unexisting column");
 
   const newTask = await Task.create({ ...req.body, columnID, owner });
 
