@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './swagger/swagger-options.js';
+import path from "path";
 
 import authRouter from './routes/auth-router.js';
 import boardRouter from './routes/board-router.js';
@@ -28,6 +29,15 @@ app.use('/api/users', authRouter);
 app.use('/api/boards', boardRouter);
 app.use('/api/columns', columnRouter);
 app.use('/api/tasks', tasksRouter);
+
+// Код для перевірки авторизації з link.html
+const basePath = path.resolve();
+
+app.use(express.static(path.join(basePath, "public")));
+app.get("/link", (req, res) => {
+  res.sendFile(path.join(basePath, "public", "link.html"));
+});
+// Код для перевірки авторизації з link.html
 
 app.use((req, res) => {
     res.status(404).json({ message: "Not found" })

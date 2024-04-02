@@ -1,5 +1,7 @@
+import axios from 'axios'; 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import queryString from "query-string";
 import dotenv from "dotenv";
 import fs from "fs/promises";
 import path from "path";
@@ -9,7 +11,8 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 dotenv.config();
 
-const { JWT_SECRET } = process.env;
+const { BASE_URL, JWT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } =
+  process.env;
 const avatarPath = path.resolve("public", "profileAvatar");
 
 const signup = async (req, res) => {
@@ -185,6 +188,55 @@ const resetPassword = async (req, res) => {
   res.json({ message: "Password successfully changed" });
 };
 
+const googleAuth = async (req, res) => {
+  const stringifiedParams = queryString.stringify({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: `${BASE_URL}/api/users/google-redirect`,
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" "),
+    response_type: "code",
+    access_type: "offline",
+    prompt: "consent",
+  });
+
+  return res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
+  );
+};
+
+const googleRedirect = async (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  const urlObj = new URL(fullUrl);
+  const urlParams = queryString.parse(urlObj.search);
+  const { code } = urlParams;
+
+  const tokenData = await axios({
+    url: `https://oauth2.googleapis.com/token`,
+    method: "post",
+    data: {
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      redirect_uri: `${BASE_URL}/api/users/google-redirect`,
+      grant_type: "authorization_code",
+      code,
+    },
+  });
+
+  const userData = await axios({
+    url: "https://www.googleapis.com/oauth2/v2/userinfo",
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${tokenData.data.access_token}`,
+    },
+  });
+
+  console.log(userData.data);
+  const { id, name, email, picture: avatar } = userData.data;
+
+};
+
 export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
@@ -195,4 +247,7 @@ export default {
   sendNeedHelp: ctrlWrapper(sendNeedHelp),
   forgotPassword: ctrlWrapper(forgotPassword),
   resetPassword: ctrlWrapper(resetPassword),
+
+  googleAuth: ctrlWrapper(googleAuth),
+  googleRedirect: ctrlWrapper(googleRedirect),
 };
