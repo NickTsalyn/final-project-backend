@@ -30,15 +30,6 @@ app.use('/api/boards', boardRouter);
 app.use('/api/columns', columnRouter);
 app.use('/api/tasks', tasksRouter);
 
-// Код для перевірки авторизації з link.html
-const basePath = path.resolve();
-
-app.use(express.static(path.join(basePath, "public")));
-app.get("/link", (req, res) => {
-  res.sendFile(path.join(basePath, "public", "link.html"));
-});
-// Код для перевірки авторизації з link.html
-
 app.use((req, res) => {
     res.status(404).json({ message: "Not found" })
 });

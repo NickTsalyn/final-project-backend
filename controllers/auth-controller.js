@@ -1,4 +1,4 @@
-import axios from 'axios'; 
+import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import queryString from "query-string";
@@ -232,9 +232,34 @@ const googleRedirect = async (req, res) => {
     },
   });
 
-  console.log(userData.data);
   const { id, name, email, picture: avatar } = userData.data;
+  const password = await bcrypt.hash(id, 10);
 
+  const googleUser = await User.findOne({ email });
+
+  if (!googleUser) {
+    const newGoogleUser = await User.create({ name, email, password, avatar });
+
+    const payload = { id: newGoogleUser._id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+    const updatedGoogleUser = await User.findByIdAndUpdate(newGoogleUser._id, {
+      token,
+    });
+
+    return res.redirect(
+      `${BASE_URL}?token=${updatedGoogleUser.token}&email=${updatedGoogleUser.email}&name=${updatedGoogleUser.name}&avatar=${updatedGoogleUser.avatar}&theme=${updatedGoogleUser.theme}`
+    );
+  }
+
+  const payload = { id: googleUser._id };
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+  const updatedGoogleUser = await User.findByIdAndUpdate(googleUser._id, {
+    token,
+  });
+
+  return res.redirect(
+    `${BASE_URL}?token=${updatedGoogleUser.token}&email=${updatedGoogleUser.email}&name=${updatedGoogleUser.name}&avatar=${updatedGoogleUser.avatar}&theme=${updatedGoogleUser.theme}`
+  );
 };
 
 export default {
