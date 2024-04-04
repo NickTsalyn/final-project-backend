@@ -13,7 +13,10 @@ authRouter.get("/current", authenticate, authController.getCurrent);
 authRouter.put("/edit", authenticate, upload.single('avatar'), resizeAvatar, validateBody(userEditScheme), authController.editProfile);
 authRouter.patch("/changeTheme", authenticate, isEmptyBody, validateBody(userChangeThemeSchema), authController.changeTheme);
 authRouter.post("/needHelp", authenticate, isEmptyBody, validateBody(userHelpMailScheme), authController.sendNeedHelp);
-authRouter.post("/recovery-mail", isEmptyBody, authController.forgotPassword)
-authRouter.patch("/reset-password", isEmptyBody, authController.resetPassword)
+authRouter.post("/recovery-mail", isEmptyBody, authController.forgotPassword);
+authRouter.patch("/reset-password", isEmptyBody, authController.resetPassword);
+
+authRouter.get("/google-auth", authController.googleAuth);
+authRouter.get("/google-redirect", authController.googleRedirect);
 
 export default authRouter;

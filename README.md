@@ -1,6 +1,4 @@
-# Project Name
-
-TASK PRO
+# TASK PRO
 
 ## Description
 

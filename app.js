@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './swagger/swagger-options.js';
+import path from "path";
 
 import authRouter from './routes/auth-router.js';
 import boardRouter from './routes/board-router.js';
